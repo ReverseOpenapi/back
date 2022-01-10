@@ -22,6 +22,7 @@ Generate an OpenAPI document with a simple web form.
     - [Branch conventions](#Branch-conventions)
 - [Stack](#Stack)
     - [Infrastructure](#Infrastructure)
+    - [Entity relationship diagram](#Entity-relationship-diagram)
 
 ## Getting started 
 
@@ -57,3 +58,7 @@ Manage branches using the [GitFlow](https://www.atlassian.com/fr/git/tutorials/c
 ## Infrastructure
 
 *TODO*
+
+## Entity relationship diagram :
+
+![entity-relationship-diagram](./documentation/entity-relationship-diagram.png)

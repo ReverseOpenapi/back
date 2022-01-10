@@ -1,0 +1,147 @@
+@startuml Reverse OpenAPI entity relationship diagram
+
+' see https://plantuml.com/fr/ to generate a diagram from this file
+
+' This model is satisfying 3NF (https://en.wikipedia.org/wiki/Database_normalization)
+
+' Store schemas created by our modeling tool
+' https://swagger.io/specification/#schema-object
+class Schema {
+    {field} id: Int
+    {field} user: ???
+    {field} content: json
+}
+
+' Root of the OpenAPI document created by the user
+' https://swagger.io/specification/#openapi-object
+class OpenApiDocument {
+    {field} id: Int
+    {field} paths : Collection<Path>
+    {field} user:  ???
+    {field} title: String
+    {field} ?description: String
+}
+
+' https://swagger.io/specification/#paths-object
+class Path {
+    {field} id: Int
+    {field} OpenApiDocument: OpenApiDocument
+    {field} endpoint: String
+    {field} items: Collection<PathItem>
+    {field} ?parameters: Collection<Parameter>
+}
+
+' https://swagger.io/specification/#path-item-object and https://swagger.io/specification/#operation-object combined for simplification
+class PathItem {
+    {field} id: Int
+    {field} path: Path
+    {field} httpMethod: HttpMethod
+    {field} ?tags: Collection<String>
+    {field} ?summary: String
+    {field} ?description: String
+    {field} response: Collection<HttpResponse>
+    {field} ?parameters: Collection<Parameter>
+    {field} ?requestBody: RequestBody
+    {field} ?securityScheme: SecurityScheme
+}
+
+' https://swagger.io/specification/#security-scheme-object
+class SecurityScheme {
+    {field} id: Int
+    {field} type: String
+    {field} description: String
+    {field} ?name: String
+    {field} ?location: String
+    {field} ?scheme: String
+    {field} ?bearerFormat: String
+    {field} ?flows: Collection<OAuthFlow>
+    {field} ?openIdConnectUrl: String
+}
+
+' https://swagger.io/specification/#oauth-flows-object
+class OAuthFlow {
+    {field} id: Int
+    {field} authorizationUrl: String
+    {field} tokenUrl: String
+    {field} refreshUrl: String
+    {field} scopes: Collection<OAuthScope>
+    {field} type: OAuthFlowType
+}
+
+' https://swagger.io/specification/#oauth-flow-object -> see field "scopes"
+class OAuthScope {
+    {field} name: String
+    {field} description: String
+}
+
+' https://swagger.io/specification/#oauth-flows-object -> all fields names are types
+class OAuthFlowType {
+    {field} id: Int
+    {field} type: String
+}
+
+' https://swagger.io/specification/#tag-object
+class Tag {
+    {field} id: Int
+    {field} name: String
+    {field} ?description: String
+    {field} OpenApiDocument: OpenApiDocument
+}
+
+' https://swagger.io/specification/#request-body-object
+class RequestBody {
+    {field} id: Int
+    {field} PathItem: PathItem
+    {field} content: Json
+    {field} required: Boolean
+    {field} ?description: String
+}
+
+' https://swagger.io/specification/#parameter-object
+class Parameter {
+    {field} id: Int
+    {field} PathItem: PathItem
+    {field} name: String
+    {field} location: ParameterLocation
+    {field} description: String
+    {field} required: Boolean
+    {field} type: PathParameterType
+}
+
+' https://swagger.io/specification/#parameter-object -> refers to "in" field name
+class ParameterLocation {
+    {field} id: Int
+    {field} location: String
+}
+
+' https://swagger.io/specification/#response-object
+class HttpResponse {
+    {field} id: Int
+    {field} PathItem: PathItem
+    {field} httpStatusCode: Int
+    {field} description: String
+    {field} content: Json
+}
+
+class HttpMethod {
+    {field} id: Int
+    {field} method: String
+}
+
+OpenApiDocument "One" -- "Many" Path
+Path "One" -- "Many" Parameter
+PathItem "One" -- "Many" Parameter
+PathItem "One" -- "Many" HttpResponse
+PathItem "Many" -- "One" HttpMethod
+Path "One" -- "Many" PathItem
+ParameterLocation "One" -- "Many" Parameter
+RequestBody "One" -- "One" PathItem
+Tag "Many" -- "One" OpenApiDocument
+Tag "One" -- "Many" PathItem
+SecurityScheme "Many" -- "One" OpenApiDocument
+OAuthFlow "Many" -- "One" SecurityScheme
+OAuthFlowType "One" -- "Many" OAuthFlow
+OAuthScope "Many" -- "One" OAuthFlow
+SecurityScheme "One" -- "Many" PathItem
+
+@enduml
