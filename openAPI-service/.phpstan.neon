@@ -13,6 +13,9 @@ parameters:
         - %rootDir%/../../../config/*
         - %rootDir%/../../../vendor/*
         - %rootDir%/../../../php_cs.php
+
+    checkGenericClassInNonGenericObjectType: false
+
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     scanDirectories:
