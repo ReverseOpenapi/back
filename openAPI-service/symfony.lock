@@ -53,6 +53,9 @@
     "doctrine/common": {
         "version": "3.2.1"
     },
+    "doctrine/data-fixtures": {
+        "version": "1.5.2"
+    },
     "doctrine/dbal": {
         "version": "3.3.0"
     },
@@ -73,6 +76,18 @@
             "config/packages/test/doctrine.yaml",
             "src/Entity/.gitignore",
             "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -112,6 +127,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
+    "fakerphp/faker": {
+        "version": "v1.18.0"
+    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.5",
         "recipe": {
@@ -135,6 +153,22 @@
     },
     "monolog/monolog": {
         "version": "2.3.5"
+    },
+    "myclabs/deep-copy": {
+        "version": "1.10.2"
+    },
+    "nelmio/alice": {
+        "version": "3.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.2",
+            "ref": "0b9900ece737bec7752e4155c0164639dd9b0cb0"
+        },
+        "files": [
+            "config/packages/dev/nelmio_alice.yaml",
+            "config/packages/test/nelmio_alice.yaml"
+        ]
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
@@ -184,8 +218,20 @@
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
+    "sebastian/comparator": {
+        "version": "4.0.6"
+    },
+    "sebastian/diff": {
+        "version": "4.0.4"
+    },
+    "sebastian/exporter": {
+        "version": "4.0.4"
+    },
     "sebastian/phpcpd": {
         "version": "6.0.3"
+    },
+    "sebastian/recursion-context": {
+        "version": "4.0.4"
     },
     "sebastian/version": {
         "version": "3.0.2"
@@ -315,6 +361,12 @@
         "version": "v1.24.0"
     },
     "symfony/process": {
+        "version": "v6.0.2"
+    },
+    "symfony/property-access": {
+        "version": "v6.0.2"
+    },
+    "symfony/property-info": {
         "version": "v6.0.2"
     },
     "symfony/proxy-manager-bridge": {

@@ -1,0 +1,115 @@
+App\Entity\OpenApiDocument:
+  document:
+    title: 'Petstore'
+    paths: ['@pet', '@pet_item']
+    tags: ['@pet_tag']
+    securitySchemes: ['@api_key']
+
+App\Entity\Path:
+  pet:
+    endpoint: '/pet'
+    items: ['@pet_post']
+  pet_item:
+    endpoint: '/pet/{id}'
+    items: ['@pet_get', '@pet_delete']
+
+App\Entity\PathItem:
+  pet_post:
+    httpMethod: '@post'
+    tags: ['@pet_tag']
+    summary: 'Add a new pet to the store'
+    responses: ['@pet_post_405']
+    requestBody: '@pet_post_body'
+    securityScheme: '@api_key'
+  pet_get:
+    httpMethod: '@get'
+    tags: ['@pet_tag']
+    summary: 'Find pet by id'
+    responses: ['@pet_get_200', '@pet_get_400', '@pet_get_404']
+    parameters: ['@pet_get_id']
+    securityScheme: '@api_key'
+  pet_delete:
+    httpMethod: '@delete'
+    tags: ['@pet_tag']
+    summary: 'Deletes a pet'
+    responses: ['@pet_delete_400', '@pet_delete_404']
+    parameters: ['@pet_delete_id']
+    securityScheme: '@api_key'
+
+App\Entity\HttpMethod:
+  post:
+    method: 'POST'
+  get:
+    method: 'GET'
+  delete:
+    method: 'DELETE'
+
+App\Entity\HttpResponse:
+  pet_post_405:
+    httpStatusCode: 405
+    description: 'Invalid input'
+  pet_get_200:
+    httpStatusCode: 200
+    description: 'Successful operation'
+    content: '[{
+      "id": 0,
+      "name": "doggie",
+      "status": "available"
+    }]'
+  pet_get_400:
+    httpStatusCode: 400
+    description: 'Invalid ID supplied'
+  pet_get_404:
+    httpStatusCode: 404
+    description: 'Pet not found'
+  pet_delete_400:
+    httpStatusCode: 400
+    description: 'Invalid ID supplied'
+  pet_delete_404:
+    httpStatusCode: 404
+    description: 'Pet not found'
+
+App\Entity\Tag:
+  pet_tag:
+    name: 'Pet'
+    description: 'Everythings about Pets'
+
+App\Entity\Parameter:
+  pet_get_id:
+    name: 'petId'
+    location: '@query'
+    description: 'ID of pet to return'
+    required: true
+  pet_delete_id:
+    name: 'petId'
+    location: '@query'
+    description: 'ID of pet to delete'
+    required: true
+
+App\Entity\ParameterLocation:
+  query:
+    location: 'query'
+
+App\Entity\RequestBody:
+  pet_post_body:
+    content: '[{
+      "id": 0,
+      "name": "doggie",
+      "status": "available"
+    }]'
+    required: true
+    description: 'Pet object that needs to be added to the store'
+
+App\Entity\SecurityScheme:
+  api_key:
+    type: '@api_key_type'
+    apiKeyLocation: '@apiKey_location_header'
+    name: 'api_key'
+
+App\Entity\SecurityType:
+  api_key_type:
+    type: 'apiKey'
+
+App\Entity\ApiKeyLocation:
+  apiKey_location_header:
+    location: 'header'
