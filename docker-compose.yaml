@@ -37,6 +37,7 @@ services:
          ports:
              - "83:8080"
     db:
+         platform: linux/amd64
          container_name: reverse-openapi_db
          image: mysql
          command: ["--default-authentication-plugin=mysql_native_password"]
