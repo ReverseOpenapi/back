@@ -57,21 +57,21 @@ services:
          container_name: reverse-openapi_composer_openapi-service
          restart: 'no'
          image: composer
-         command: ["composer", "install"]
+         command: ["composer", "install", "--ignore-platform-reqs"]
          volumes:
              - ./openAPI-service:/app
     composer_sql-fixtures-service:
          container_name: reverse-openapi_composer_sql-fixtures-service
          restart: 'no'
          image: composer
-         command: ["composer", "install"]
+         command: ["composer", "install", "--ignore-platform-reqs"]
          volumes:
              - ./sql-fixtures-service:/app
     composer_api-client:
          container_name: reverse-openapi_composer_api-client
          restart: 'no'
          image: composer
-         command: ["composer", "install"]
+         command: ["composer", "install", "--ignore-platform-reqs"]
          volumes:
              - ./api-client:/app
     gcp-pubsub-emulator:
