@@ -30,8 +30,12 @@
         "phpstan/phpstan-doctrine": "^1.2",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.1",
+        "phpunit/phpunit": "^9.5",
         "sebastian/phpcpd": "^6.0",
-        "symfony/maker-bundle": "^1.36"
+        "symfony/browser-kit": "6.0.*",
+        "symfony/css-selector": "6.0.*",
+        "symfony/maker-bundle": "^1.36",
+        "symfony/phpunit-bridge": "^6.0"
     },
     "config": {
         "allow-plugins": {
