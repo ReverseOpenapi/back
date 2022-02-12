@@ -26,11 +26,11 @@ class Parameter
     #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'parameters')]
     private ?Path $path;
 
-    #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'parameters')]
-    private ?PathItem $pathItem;
-
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name;
+
+    #[ORM\Column(type: 'json')]
+    private array $parameterSchema = [];
 
     public function getId(): ?int
     {
@@ -85,18 +85,6 @@ class Parameter
         return $this;
     }
 
-    public function getPathItem(): ?PathItem
-    {
-        return $this->pathItem;
-    }
-
-    public function setPathItem(?PathItem $pathItem): self
-    {
-        $this->pathItem = $pathItem;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -105,6 +93,18 @@ class Parameter
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getParameterSchema(): ?array
+    {
+        return $this->parameterSchema;
+    }
+
+    public function setParameterSchema(array $parameterSchema): self
+    {
+        $this->parameterSchema = $parameterSchema;
 
         return $this;
     }

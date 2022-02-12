@@ -11,7 +11,7 @@ class RequestBody
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     /**
      * @var array<mixed>
@@ -20,10 +20,10 @@ class RequestBody
     private array $content = [];
 
     #[ORM\Column(type: 'boolean')]
-    private ?bool $required;
+    private ?bool $required = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description;
+    private ?string $description = null;
 
     #[ORM\OneToOne(mappedBy: 'requestBody', targetEntity: PathItem::class, cascade: ['persist', 'remove'])]
     private ?PathItem $pathItem;

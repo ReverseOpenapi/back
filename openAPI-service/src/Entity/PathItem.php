@@ -25,9 +25,6 @@ class PathItem
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
-    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: Parameter::class)]
-    private Collection $parameters;
-
     #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true)]
     private Collection $responses;
 
@@ -35,7 +32,8 @@ class PathItem
     #[ORM\JoinColumn(nullable: false)]
     private ?HttpMethod $httpMethod;
 
-    #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'])]
+    // TODO refactor Hydrator to use getter to allow fetch LAZY
+    #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?RequestBody $requestBody;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'pathItems')]
@@ -46,7 +44,6 @@ class PathItem
 
     public function __construct()
     {
-        $this->parameters = new ArrayCollection();
         $this->responses = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -88,36 +85,6 @@ class PathItem
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Parameter[]
-     */
-    public function getParameters(): Collection
-    {
-        return $this->parameters;
-    }
-
-    public function addParameter(Parameter $parameter): self
-    {
-        if (!$this->parameters->contains($parameter)) {
-            $this->parameters[] = $parameter;
-            $parameter->setPathItem($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParameter(Parameter $parameter): self
-    {
-        if ($this->parameters->removeElement($parameter)) {
-            // set the owning side to null (unless already changed)
-            if ($parameter->getPathItem() === $this) {
-                $parameter->setPathItem(null);
-            }
-        }
 
         return $this;
     }

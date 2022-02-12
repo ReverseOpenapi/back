@@ -13,15 +13,15 @@ class OpenApiDocument
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private ?string $title;
+    private string $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description;
+    private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'OpenApiDocument', targetEntity: Path::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true)]
     private Collection $paths;
 
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true)]
@@ -29,6 +29,9 @@ class OpenApiDocument
 
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: SecurityScheme::class, orphanRemoval: true)]
     private Collection $securitySchemes;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $version;
 
     public function __construct()
     {
@@ -42,7 +45,7 @@ class OpenApiDocument
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -152,6 +155,18 @@ class OpenApiDocument
                 $securityScheme->setOpenApiDocument(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    public function setVersion(string $version): self
+    {
+        $this->version = $version;
 
         return $this;
     }
