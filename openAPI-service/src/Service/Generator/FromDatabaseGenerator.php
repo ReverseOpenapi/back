@@ -3,9 +3,6 @@
 namespace App\Service\Generator;
 
 use App\DTO\Document\AbstractDocument;
-use App\DTO\Document\Info;
-use App\DTO\Document\Parameter;
-use App\DTO\Document\Response;
 use App\Repository\OpenApiDocumentRepository;
 use App\Service\Builder\BuilderInterface;
 use App\Service\Builder\BuilderObject\InfoBuilderObject;
@@ -14,9 +11,8 @@ use App\Service\Builder\BuilderObject\PathBuilderObject;
 use App\Service\Builder\BuilderObject\PathItemBuilderObject;
 use App\Service\Builder\BuilderObject\RequestBodyBuilderObject;
 use App\Service\Builder\BuilderObject\ResponseBuilderObject;
-use App\Service\Document;
+use App\Service\Builder\BuilderObject\TagBuilderObject;
 use App\Service\Hydrator\HydratorInterface;
-use App\Service\OpenApiInterface;
 
 class FromDatabaseGenerator implements GeneratorInterface
 {
@@ -44,6 +40,11 @@ class FromDatabaseGenerator implements GeneratorInterface
         $this->builder->buildInfo($infoBuilderObject);
 
 
+        foreach ($openApiDocumentEntity->getTags() as $tag) {
+            $tagBuilderObject = $this->hydrator->hydrateFromObject($tag, new TagBuilderObject());
+            $this->builder->buildTag($tagBuilderObject);
+        }
+
         foreach ($openApiDocumentEntity->getPaths() as $path) {
             $pathBuilderObject = new PathBuilderObject();
             $pathBuilderObject->setEndpoint($path->getEndpoint());
@@ -61,6 +62,11 @@ class FromDatabaseGenerator implements GeneratorInterface
                     $responseBuilderObject = $this->hydrator->hydrateFromObject($response, new ResponseBuilderObject());
                     $pathItemBuilder->addResponse($responseBuilderObject);
                 }
+
+                foreach ($pathItem->getTags() as $tag) {
+                    $pathItemBuilder->addTag($tag->getName());
+                }
+
                 $pathBuilderObject->addPathItem($pathItemBuilder);
             }
 

@@ -10,6 +10,9 @@ class PathItem
     #[Ignore]
     private string $httpMethod;
 
+    #[SerializedName('tags')]
+    private ?iterable $tags = null;
+
     #[SerializedName('summary')]
     private ?string $summary = null;
 
@@ -76,4 +79,18 @@ class PathItem
         return $this;
     }
 
+    public function getTags(): ?iterable
+    {
+        return $this->tags;
+    }
+
+    public function addTag(string $tag): self
+    {
+        if ($this->tags === null) {
+            $this->tags = [];
+        }
+
+        array_push($this->tags, $tag);
+        return $this;
+    }
 }

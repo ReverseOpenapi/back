@@ -5,6 +5,12 @@
     "description": "This is a Pet Store",
     "version": "1.0.0"
   },
+  "tags": [
+    {
+      "name": "Pet",
+      "description": "Everything about your Pets"
+    }
+  ],
   "paths": {
     "/pet/{id}": {
       "parameters": [
@@ -20,6 +26,9 @@
       ],
       "put": {
         "summary": "Update a pet",
+        "tags": [
+          "Pet"
+        ],
         "requestBody": {
           "description": "Pet object that needs to be added to the store",
           "required": true,
@@ -51,6 +60,9 @@
       "get": {
         "summary": "Find pet by id",
         "description": "Find a pet in the Pet Store",
+        "tags": [
+          "Pet"
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",

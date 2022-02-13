@@ -93,8 +93,8 @@ App\Entity\HttpResponse:
 
 App\Entity\Tag:
   pet_tag:
-    name: 'Pet'
-    description: 'Everythings about Pets'
+    name: 'pet'
+    description: 'Everything about your Pets'
 
 App\Entity\Parameter:
   pet_get_id:

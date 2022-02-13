@@ -2,11 +2,11 @@
 
 namespace App\Service\Builder\BuilderObject;
 
-use App\Service\Builder\BuilderObject\PathItemBuilderObjectInterface;
-
 class PathItemBuilderObject
 {
     private string $httpMethod;
+
+    private iterable $tags = [];
 
     private ?string $summary = null;
 
@@ -68,6 +68,21 @@ class PathItemBuilderObject
     public function setRequestBody(?RequestBodyBuilderObject $requestBody): self
     {
         $this->requestBody = $requestBody;
+        return $this;
+    }
+
+    public function getTags(): iterable
+    {
+        return $this->tags;
+    }
+
+    public function addTag(string $tag): self
+    {
+        if ($this->tags === null) {
+            $this->tags = [];
+        }
+
+        array_push($this->tags, $tag);
         return $this;
     }
 }

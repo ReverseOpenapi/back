@@ -14,6 +14,12 @@ class OpenApi extends AbstractDocument
     private Info $info;
 
     /**
+     * @var iterable<Tag>|null
+     */
+    #[SerializedName('tags')]
+    private ?iterable $tags = null;
+
+    /**
      * @var iterable<Path>
      */
     #[SerializedName('paths')]
@@ -77,6 +83,21 @@ class OpenApi extends AbstractDocument
             'paths' => $paths,
             'responses' => $responses
         ];
+    }
+
+    public function getTags(): iterable|null
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if ($this->tags === null) {
+            $this->tags = [];
+        }
+
+        array_push($this->tags, $tag);
+        return $this;
     }
 
 }

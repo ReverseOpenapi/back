@@ -9,13 +9,12 @@ use App\DTO\Document\Path;
 use App\DTO\Document\PathItem;
 use App\DTO\Document\RequestBody;
 use App\DTO\Document\Response;
+use App\DTO\Document\Tag;
 use App\Service\Builder\BuilderObject\InfoBuilderObject;
-use App\Service\Builder\BuilderObject\InfoBuilderObjectInterface;
 use App\Service\Builder\BuilderObject\PathBuilderObject;
-use App\Service\Builder\BuilderObject\PathBuilderObjectInterface;
 use App\DTO\Document\OpenApi;
+use App\Service\Builder\BuilderObject\TagBuilderObject;
 use App\Service\Hydrator\HydratorInterface;
-use App\Tests\Fixtures\PathObject;
 
 class OpenApiDocumentBuilder implements BuilderInterface
 {
@@ -47,6 +46,10 @@ class OpenApiDocumentBuilder implements BuilderInterface
 
         foreach ($pathBuilderObject->getPathItems() as $pathItemBuilderObject) {
             $pathItem = $this->hydrator->hydrateFromObject($pathItemBuilderObject, new PathItem());
+            foreach ($pathItemBuilderObject->getTags() as $tag) {
+                $pathItem->addTag($tag);
+            }
+
             if ($pathItemBuilderObject->getRequestBody()) {
                 $requestBody = $this->hydrator->hydrateFromObject($pathItemBuilderObject->getRequestBody(), new RequestBody());
                 $pathItem->setRequestBody($requestBody);
@@ -65,5 +68,11 @@ class OpenApiDocumentBuilder implements BuilderInterface
         }
 
         $this->document->addPath($path);
+    }
+
+    public function buildTag(TagBuilderObject $tagBuilderObject): void
+    {
+        $tag = $this->hydrator->hydrateFromObject($tagBuilderObject, new Tag());
+        $this->document->addTag($tag);
     }
 }

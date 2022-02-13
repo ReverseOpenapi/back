@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Unit\Service;
 
 use App\DTO\Document\OpenApi;
 use App\Service\Builder\BuilderInterface;
 use App\Service\Builder\BuilderObject\ParameterBuilderObject;
 use App\Service\Builder\BuilderObject\RequestBodyBuilderObject;
 use App\Service\Builder\BuilderObject\ResponseBuilderObject;
+use App\Service\Builder\BuilderObject\TagBuilderObject;
 use App\Service\Builder\OpenApiDocumentBuilder;
 use App\Service\Builder\BuilderObject\InfoBuilderObject;
 use App\Service\Builder\BuilderObject\PathBuilderObject;
@@ -79,7 +80,8 @@ class OpenApiDocumentBuilderTest extends KernelTestCase
             'id' => 0,
             'name' => 'doggie'
         ]);
-        $pathItem->setRequestBody($requestBody);
+        $pathItem->setRequestBody($requestBody)
+            ->addTag('pet');
 
         $parameter = new ParameterBuilderObject();
         $parameter->setName('petId')
@@ -97,6 +99,7 @@ class OpenApiDocumentBuilderTest extends KernelTestCase
         $this->assertEquals('get', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getHttpMethod());
         $this->assertEquals('Find a pet', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getSummary());
         $this->assertEquals('Find a pet in the Pet Store', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getDescription());
+        $this->assertEquals('pet', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getTags()[0]);
         $this->assertEquals('Success', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getResponses()[0]->getDescription());
         $this->assertEquals(200, $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getResponses()[0]->getHttpStatusCode());
         $this->assertEquals([
@@ -122,6 +125,18 @@ class OpenApiDocumentBuilderTest extends KernelTestCase
         ], $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getRequestBody()->getContent());
         $this->assertEquals('Pet object that needs to be added to the store', $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getRequestBody()->getDescription());
         $this->assertEquals(true, $this->builder->getDocument()->getPaths()[0]->getPathItems()[0]->getRequestBody()->getRequired());
+    }
+
+    public function testBuildTag(): void
+    {
+        $tag = new TagBuilderObject();
+        $tag->setName('Pet')
+            ->setDescription('Everything about your Pets');
+        $this->builder->buildTag($tag);
+
+        $this->assertEquals('Everything about your Pets', $this->builder->getDocument()->getTags()[0]->getDescription());
+        $this->assertEquals('Pet', $this->builder->getDocument()->getTags()[0]->getName());
+
     }
 
     public function tearDown(): void
