@@ -16,6 +16,7 @@ use App\Service\Builder\BuilderObject\RequestBodyBuilderObject;
 use App\Service\Builder\BuilderObject\ResponseBuilderObject;
 use App\Service\Builder\BuilderObject\TagBuilderObject;
 use App\Service\Hydrator\HydratorInterface;
+use Exception;
 
 class Generator implements GeneratorInterface
 {
@@ -41,8 +42,11 @@ class Generator implements GeneratorInterface
     public function generate(string $openApiDocumentId): AbstractDocument
     {
         $openApiDocumentEntity = $this->openApiDocumentRepository->findOneBy(['id' => $openApiDocumentId]);
-        $openApiObjectBuilder = new OpenApiBuilderObject();
+        if (null === $openApiDocumentEntity) {
+            throw new Exception("Document not found");
+        }
 
+        $openApiObjectBuilder = new OpenApiBuilderObject();
         $infoBuilderObject = $this->hydrator->hydrateFromObject($openApiDocumentEntity, new InfoBuilderObject());
         $openApiObjectBuilder->setInfo($infoBuilderObject);
 

@@ -4,9 +4,6 @@ namespace App\Tests\Integration\Service\Generator;
 
 use App\Service\Generator\Generator;
 use App\Service\Generator\GeneratorInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\ORMDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class GeneratorTest extends KernelTestCase
@@ -21,12 +18,15 @@ class GeneratorTest extends KernelTestCase
 
     public function testGenerationFromDatabase(): void
     {
-        //TODO: load fixtures directly from test
-        $openApi = $this->generator->generate(21);
-
-//        dd($openApi->toYaml());
+        $openApi = $this->generator->generate(1);
 
         $this->assertJsonStringEqualsJsonFile('/var/www/html/tests/Fixtures/OpenApi.json', $openApi->toJson());
+    }
+
+    public function testException(): void
+    {
+        $this->expectExceptionMessage('Document not found');
+        $this->generator->generate(0);
     }
 
     public function tearDown(): void

@@ -3,6 +3,7 @@
 namespace App\Service\Generator;
 
 use App\Service\Document\V3\AbstractDocument;
+use Exception;
 
 /**
  * OpenAPI document generator
@@ -16,6 +17,7 @@ interface GeneratorInterface
      *
      * @param string $openApiDocumentId database id of the document to generate
      * @return AbstractDocument the generated document
+     * @throws Exception if document not found
      */
     public function generate(string $openApiDocumentId): AbstractDocument;
 }

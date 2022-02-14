@@ -9,7 +9,7 @@ use App\Service\Builder\BuilderObject\ParameterBuilderObject;
 use App\Service\Builder\BuilderObject\RequestBodyBuilderObject;
 use App\Service\Builder\BuilderObject\ResponseBuilderObject;
 use App\Service\Builder\BuilderObject\TagBuilderObject;
-use App\Service\Builder\OpenApiDocumentBuilder;
+use App\Service\Builder\DocumentV3Builder;
 use App\Service\Builder\BuilderObject\InfoBuilderObject;
 use App\Service\Builder\BuilderObject\PathBuilderObject;
 use App\Service\Builder\BuilderObject\PathItemBuilderObject;
@@ -24,7 +24,7 @@ class OpenApiDocumentBuilderTest extends KernelTestCase
 
     public function testBuildDocument(): void
     {
-        $this->builder = new OpenApiDocumentBuilder(new Hydrator());
+        $this->builder = new DocumentV3Builder(new Hydrator());
         $openApiBuilderObject = $this->createOpenApiBuilderObject();
         $this->document = $this->builder->buildDocument($openApiBuilderObject);
 

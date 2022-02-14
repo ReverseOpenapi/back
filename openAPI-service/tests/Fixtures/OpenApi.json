@@ -7,7 +7,7 @@
   },
   "tags": [
     {
-      "name": "Pet",
+      "name": "pet",
       "description": "Everything about your Pets"
     }
   ],
@@ -25,13 +25,16 @@
         }
       ],
       "put": {
-        "summary": "Update a pet",
         "tags": [
-          "Pet"
+          "pet"
         ],
+        "summary": "Update a pet",
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        },
         "requestBody": {
-          "description": "Pet object that needs to be added to the store",
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -49,20 +52,17 @@
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
+          },
+          "description": "Pet object that needs to be added to the store",
+          "required": true
         }
       },
       "get": {
+        "tags": [
+          "pet"
+        ],
         "summary": "Find pet by id",
         "description": "Find a pet in the Pet Store",
-        "tags": [
-          "Pet"
-        ],
         "responses": {
           "200": {
             "description": "Successful operation",

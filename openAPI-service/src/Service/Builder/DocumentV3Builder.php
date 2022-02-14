@@ -16,7 +16,7 @@ use App\Service\Document\V3\OpenApi;
 use App\Service\Builder\BuilderObject\PathItemBuilderObject;
 use App\Service\Hydrator\HydratorInterface;
 
-class OpenApiDocumentBuilder implements BuilderInterface
+class DocumentV3Builder implements BuilderInterface
 {
     private AbstractDocument $document;
 
