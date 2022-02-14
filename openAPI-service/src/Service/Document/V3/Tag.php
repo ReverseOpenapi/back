@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Document;
+namespace App\Service\Document\V3;
 
 class Tag
 {

@@ -32,7 +32,7 @@ class PathItem
     #[ORM\JoinColumn(nullable: false)]
     private ?HttpMethod $httpMethod;
 
-    // TODO refactor Hydrator to use getter to allow fetch LAZY
+    // TODO: why is requestBody not initialized when lazy loaded and getter is called by hydrator ?
     #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?RequestBody $requestBody;
 

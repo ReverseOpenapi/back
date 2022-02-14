@@ -47,7 +47,7 @@ class ParameterBuilderObject
         return $this;
     }
 
-    public function isRequired(): bool
+    public function getRequired(): bool
     {
         return $this->required;
     }

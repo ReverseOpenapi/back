@@ -78,6 +78,24 @@ class HydratorTest extends TestCase
         $this->assertNotEquals([0, 1], $objectToHydrate->getTitle());
     }
 
+    /**
+     * Test that no exception is thrown
+     */
+    public function testUndefinedGetter(): void
+    {
+        $this->expectNotToPerformAssertions();
+        $object = new Class() {
+            private string $title = 'lorem';
+
+            public function setTitle(string $title): self
+            {
+                $this->title = $title;
+                return $this;
+            }
+        };
+        $this->hydrator->hydrateFromObject($object, $this->getObjectToHydrate());
+    }
+
     public function tearDown(): void
     {
         unset($this->hydrator);

@@ -1,0 +1,103 @@
+<?php
+
+namespace App\Service\Generator;
+
+use App\Service\Document\V3\AbstractDocument;
+use App\Entity\Path;
+use App\Entity\PathItem;
+use App\Repository\OpenApiDocumentRepository;
+use App\Service\Builder\BuilderInterface;
+use App\Service\Builder\BuilderObject\InfoBuilderObject;
+use App\Service\Builder\BuilderObject\OpenApiBuilderObject;
+use App\Service\Builder\BuilderObject\ParameterBuilderObject;
+use App\Service\Builder\BuilderObject\PathBuilderObject;
+use App\Service\Builder\BuilderObject\PathItemBuilderObject;
+use App\Service\Builder\BuilderObject\RequestBodyBuilderObject;
+use App\Service\Builder\BuilderObject\ResponseBuilderObject;
+use App\Service\Builder\BuilderObject\TagBuilderObject;
+use App\Service\Hydrator\HydratorInterface;
+
+class Generator implements GeneratorInterface
+{
+    private OpenApiDocumentRepository $openApiDocumentRepository;
+
+    private BuilderInterface $builder;
+
+    private HydratorInterface $hydrator;
+
+    public function __construct(
+        OpenApiDocumentRepository $openApiDocumentRepository,
+        BuilderInterface $builder,
+        HydratorInterface $hydrator
+    ) {
+        $this->openApiDocumentRepository = $openApiDocumentRepository;
+        $this->builder = $builder;
+        $this->hydrator = $hydrator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function generate(string $openApiDocumentId): AbstractDocument
+    {
+        $openApiDocumentEntity = $this->openApiDocumentRepository->findOneBy(['id' => $openApiDocumentId]);
+        $openApiObjectBuilder = new OpenApiBuilderObject();
+
+        $infoBuilderObject = $this->hydrator->hydrateFromObject($openApiDocumentEntity, new InfoBuilderObject());
+        $openApiObjectBuilder->setInfo($infoBuilderObject);
+
+        foreach ($openApiDocumentEntity->getTags() as $tag) {
+            $tagBuilderObject = $this->hydrator->hydrateFromObject($tag, new TagBuilderObject());
+            $openApiObjectBuilder->addTag($tagBuilderObject);
+        }
+
+        foreach ($openApiDocumentEntity->getPaths() as $path) {
+            $pathBuilderObject = $this->getPathBuilderObject($path);
+            $openApiObjectBuilder->addPath($pathBuilderObject);
+        }
+
+        return $this->builder->buildDocument($openApiObjectBuilder);
+    }
+
+    private function getPathBuilderObject(Path $path): PathBuilderObject
+    {
+        $pathBuilderObject = new PathBuilderObject();
+        $pathBuilderObject->setEndpoint($path->getEndpoint());
+
+        foreach ($path->getItems() as $pathItem) {
+            $pathItemBuilder = $this->getPathItemBuilderObject($pathItem);
+            $pathBuilderObject->addPathItem($pathItemBuilder);
+        }
+
+        foreach ($path->getParameters() as $parameter) {
+            $parameterBuildObject = $this->hydrator->hydrateFromObject($parameter, new ParameterBuilderObject());
+            $parameterBuildObject->setLocation($parameter->getLocation()->getLocation())
+                ->setSchema($parameter->getParameterSchema());
+            $pathBuilderObject->addParameter($parameterBuildObject);
+        }
+
+        return $pathBuilderObject;
+    }
+
+    private function getPathItemBuilderObject(PathItem $pathItem): PathItemBuilderObject
+    {
+        $pathItemBuilder = $this->hydrator->hydrateFromObject($pathItem, new PathItemBuilderObject());
+        $pathItemBuilder->setHttpMethod(strtolower($pathItem->getHttpMethod()->getMethod()));
+
+        if ($pathItem->getRequestBody()) {
+            $requestBodyBuilderObject = $this->hydrator->hydrateFromObject($pathItem->getRequestBody(), new RequestBodyBuilderObject());
+            $pathItemBuilder->setRequestBody($requestBodyBuilderObject);
+        }
+
+        foreach ($pathItem->getResponses() as $response) {
+            $responseBuilderObject = $this->hydrator->hydrateFromObject($response, new ResponseBuilderObject());
+            $pathItemBuilder->addResponse($responseBuilderObject);
+        }
+
+        foreach ($pathItem->getTags() as $tag) {
+            $pathItemBuilder->addTag($tag->getName());
+        }
+
+        return $pathItemBuilder;
+    }
+}

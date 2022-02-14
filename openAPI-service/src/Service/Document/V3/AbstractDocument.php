@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Document;
+namespace App\Service\Document\V3;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Annotation\Ignore;
@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Yaml\Yaml;
 
 abstract class AbstractDocument
 {
@@ -24,29 +25,46 @@ abstract class AbstractDocument
         $this->serializer = $this->initializeSerializer();
     }
 
+    /**
+     * Generate the document in JSON format
+     */
     public function toJson(): string
     {
         return $this->serializer->serialize($this, 'json', [AbstractObjectNormalizer::SKIP_NULL_VALUES => true]);
     }
 
+    /**
+     * Generate the document in YAML format
+     */
     public function toYaml(): string
     {
-        return "";
+        $flags = Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE;
+        return Yaml::dump(json_decode($this->toJson(), true), 10, 2, $flags);
     }
 
     private function initializeSerializer(): SerializerInterface
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
-
         $defaultContext = [
             AbstractNormalizer::CALLBACKS => $this->getNormalizerCallbacks(),
         ];
 
         return new Serializer(
-            [new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter, null, null, null, null, $defaultContext)],
-            ['json' => new JsonEncoder()]
+            [
+                new ObjectNormalizer(
+                    $classMetadataFactory,
+                    $metadataAwareNameConverter,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $defaultContext
+                )
+            ],
+            [
+                'json' => new JsonEncoder()
+            ]
         );
     }
 

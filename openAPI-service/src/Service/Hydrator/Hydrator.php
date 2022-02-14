@@ -10,9 +10,14 @@ class Hydrator implements HydratorInterface
         foreach ($reflection->getProperties() as $reflectionProperty) {
             $property = $reflectionProperty->getName();
             $setter = 'set'.$property;
-            if (method_exists($objectToHydrate, $setter) && $reflectionProperty->getValue($object)) {
+            $getter = 'get'.$property;
+            if (
+                method_exists($objectToHydrate, $setter)
+                && method_exists($object, $getter)
+                && $reflectionProperty->getValue($object)
+            ) {
                 try {
-                    $objectToHydrate->$setter($reflectionProperty->getValue($object));
+                    $objectToHydrate->$setter($object->$getter());
                 } catch (\TypeError $e) {
 
                 }

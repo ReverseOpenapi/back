@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Service;
 
-use App\DTO\Document\AbstractDocument;
-use App\DTO\Document\OpenApi;
+use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\V3\OpenApi;
 use PHPUnit\Framework\TestCase;
 
 class OpenApiTest extends TestCase
@@ -17,7 +17,6 @@ class OpenApiTest extends TestCase
 
     public function testReturnedValues(): void
     {
-//        $this->assertIsArray($this->openApi->getDocument());
         $this->assertIsString($this->openApi->toJson());
         $this->assertIsString($this->openApi->toYaml());
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Document;
+namespace App\Service\Document\V3;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
@@ -65,7 +65,7 @@ class Parameter
         return $this;
     }
 
-    public function isRequired(): bool
+    public function getRequired(): bool
     {
         return $this->required;
     }
