@@ -20,7 +20,7 @@ class GeneratorTest extends KernelTestCase
     {
         $openApi = $this->generator->generate(1);
 
-        $this->assertJsonStringEqualsJsonFile('/var/www/html/tests/Fixtures/OpenApi.json', $openApi->toJson());
+        $this->assertJsonStringEqualsJsonFile(__DIR__ . '/../../../Fixtures/OpenApi.json', $openApi->toJson());
     }
 
     public function testException(): void
