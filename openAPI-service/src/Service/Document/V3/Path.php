@@ -14,7 +14,7 @@ class Path
      * @var iterable<Parameter>
      */
     #[SerializedName('parameters')]
-    private iterable $parameters = [];
+    private ?iterable $parameters = null;
 
     /**
      * @var iterable<PathItem>
@@ -46,13 +46,17 @@ class Path
         return $this;
     }
 
-    public function getParameters(): iterable
+    public function getParameters(): ?iterable
     {
         return $this->parameters;
     }
 
     public function addParameter(Parameter $parameter): self
     {
+        if ($this->parameters === null) {
+            $this->parameters = [];
+        }
+
         array_push($this->parameters, $parameter);
         return $this;
     }

@@ -63,7 +63,9 @@ class OpenApi extends AbstractDocument
         $paths = function ($innerObject, $outerObject, string $attributeName, string $format = null, array $context = []) {
             $serializedFields = [];
             foreach ($innerObject as $path) {
-                $serializedFields[$path->getEndpoint()]['parameters'] = $path->getParameters();
+                if ($path->getParameters()) {
+                    $serializedFields[$path->getEndpoint()]['parameters'] = $path->getParameters();
+                }
                 foreach($path->getPathItems() as $pathItem) {
                     $serializedFields[$path->getEndpoint()][$pathItem->getHttpMethod()] = $pathItem;
                 }
