@@ -2,7 +2,7 @@
 
 namespace App\Service\Builder;
 
-use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\AbstractDocument;
 use App\Service\Document\V3\Info;
 use App\Service\Document\V3\Parameter;
 use App\Service\Document\V3\Path;

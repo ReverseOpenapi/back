@@ -24,4 +24,21 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Service\Generator\FromDatabaseGenerator:
+    Aws\S3\S3Client:
+        arguments:
+            -
+                credentials:
+                  key: '%env(S3_KEY)%'
+                  secret: '%env(S3_SECRET)%'
+                version: '%env(S3_VERSION)%'
+                region: '%env(S3_REGION)%'
+
+
+    Gaufrette\Adapter\AwsS3:
+        arguments:
+            '$service': '@Aws\S3\S3Client'
+            '$bucket': '%env(S3_BUCKET)%'
+
+    Gaufrette\Filesystem:
+        arguments:
+            '$adapter': '@Gaufrette\Adapter\AwsS3'

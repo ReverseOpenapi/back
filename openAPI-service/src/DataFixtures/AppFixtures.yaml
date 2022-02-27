@@ -5,6 +5,7 @@ App\Entity\OpenApiDocument:
     tags: ['@pet_tag']
     securitySchemes: ['@api_key']
     version: '1.0.0'
+    userId: 'b842cac0-cbe1-401e-b4bc-97b39c97cc1d'
 
 App\Entity\Path:
   pet:

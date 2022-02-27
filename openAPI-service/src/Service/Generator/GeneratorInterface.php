@@ -2,7 +2,7 @@
 
 namespace App\Service\Generator;
 
-use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\AbstractDocument;
 use Exception;
 
 /**

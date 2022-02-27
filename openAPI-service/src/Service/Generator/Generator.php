@@ -2,7 +2,7 @@
 
 namespace App\Service\Generator;
 
-use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\AbstractDocument;
 use App\Entity\Path;
 use App\Entity\PathItem;
 use App\Repository\OpenApiDocumentRepository;
@@ -60,7 +60,9 @@ class Generator implements GeneratorInterface
             $openApiObjectBuilder->addPath($pathBuilderObject);
         }
 
-        return $this->builder->buildDocument($openApiObjectBuilder);
+        $document = $this->builder->buildDocument($openApiObjectBuilder);
+        $document->setUserId($openApiDocumentEntity->getUserId());
+        return $document;
     }
 
     private function getPathBuilderObject(Path $path): PathBuilderObject

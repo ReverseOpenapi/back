@@ -2,6 +2,7 @@
 
 namespace App\Service\Document\V3;
 
+use App\Service\Document\AbstractDocument;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 

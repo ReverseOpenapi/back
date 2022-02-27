@@ -33,6 +33,9 @@ class OpenApiDocument
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $UserId;
+
     public function __construct()
     {
         $this->paths = new ArrayCollection();
@@ -167,6 +170,18 @@ class OpenApiDocument
     public function setVersion(string $version): self
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    public function getUserId(): ?string
+    {
+        return $this->UserId;
+    }
+
+    public function setUserId(string $UserId): self
+    {
+        $this->UserId = $UserId;
 
         return $this;
     }

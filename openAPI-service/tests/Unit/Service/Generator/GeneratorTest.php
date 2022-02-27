@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Service\Generator;
 
-use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\AbstractDocument;
 use App\Entity\OpenApiDocument;
 use App\Repository\OpenApiDocumentRepository;
 use App\Service\Builder\Factory\BuilderFactoryInterface;
@@ -21,6 +21,7 @@ class GeneratorTest extends TestCase
     public function setUp(): void
     {
         $openApiDocument = new OpenApiDocument();
+        $openApiDocument->setUserId('b842cac0-cbe1-401e-b4bc-97b39c97cc1d');
         $openApiDocument->setTitle('Pet Store');
 
         $openApiDocumentRepository = $this->createMock(OpenApiDocumentRepository::class);

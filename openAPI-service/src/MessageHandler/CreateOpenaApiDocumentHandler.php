@@ -3,13 +3,26 @@
 namespace App\MessageHandler;
 
 use App\Message\CreateOpenApiDocument;
+use App\Service\Generator\GeneratorInterface;
+use Gaufrette\Filesystem;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CreateOpenaApiDocumentHandler implements MessageHandlerInterface
 {
+    private Filesystem $filesystem;
+
+    private GeneratorInterface $generator;
+
+    public function __construct(Filesystem $filesystem, GeneratorInterface $generator)
+    {
+        $this->filesystem = $filesystem;
+        $this->generator = $generator;
+    }
+
     public function __invoke(CreateOpenApiDocument $message)
     {
-        // TODO: generate document and store it somewhere
-        dump('Will create document for id '.$message->getDocumentId());
+        $document = $this->generator->generate($message->getDocumentId());
+        $this->filesystem->write($document->getUserId() . '/openapi.json', $document->toJson(), true);
     }
 }
+

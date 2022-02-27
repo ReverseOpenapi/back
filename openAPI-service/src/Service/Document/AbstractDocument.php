@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Document\V3;
+namespace App\Service\Document;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Annotation\Ignore;
@@ -19,6 +19,9 @@ abstract class AbstractDocument
 {
     #[Ignore]
     private SerializerInterface $serializer;
+
+    #[Ignore]
+    private string $userId;
 
     public function __construct()
     {
@@ -72,5 +75,17 @@ abstract class AbstractDocument
     protected function getNormalizerCallbacks(): array
     {
        return [];
+    }
+
+    #[Ignore]
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(string $userId): self
+    {
+        $this->userId = $userId;
+        return $this;
     }
 }

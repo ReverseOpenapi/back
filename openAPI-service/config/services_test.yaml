@@ -26,3 +26,11 @@ services:
 
     App\Service\Generator\Generator:
         public: true
+
+    Gaufrette\Adapter\Local:
+        arguments:
+            $directory: '%kernel.project_dir%/var/tests'
+
+    Gaufrette\Filesystem:
+        arguments:
+            '$adapter': '@Gaufrette\Adapter\Local'

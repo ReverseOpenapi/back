@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Service;
 
-use App\Service\Document\V3\AbstractDocument;
+use App\Service\Document\AbstractDocument;
 use App\Service\Document\V3\OpenApi;
 use PHPUnit\Framework\TestCase;
 
@@ -17,8 +17,10 @@ class OpenApiTest extends TestCase
 
     public function testReturnedValues(): void
     {
+        $this->openApi->setUserId('b842cac0-cbe1-401e-b4bc-97b39c97cc1d');
         $this->assertIsString($this->openApi->toJson());
         $this->assertIsString($this->openApi->toYaml());
+        $this->assertEquals('b842cac0-cbe1-401e-b4bc-97b39c97cc1d', $this->openApi->getUserId());
     }
 
     public function tearDown(): void

@@ -16,13 +16,6 @@ class GeneratorTest extends KernelTestCase
         $this->generator = static::getContainer()->get(Generator::class);
     }
 
-    public function testGenerationFromDatabase(): void
-    {
-        $openApi = $this->generator->generate(1);
-
-        $this->assertJsonStringEqualsJsonFile(__DIR__ . '/../../../Fixtures/OpenApi.json', $openApi->toJson());
-    }
-
     public function testException(): void
     {
         $this->expectExceptionMessage('Document not found');
