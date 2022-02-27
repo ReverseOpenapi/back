@@ -1,8 +1,8 @@
 <?php
 
-namespace App\MessageHandler;
+namespace App\Messenger\MessageHandler;
 
-use App\Message\CreateOpenApiDocument;
+use App\Messenger\Message\CreateOpenApiDocument;
 use App\Service\Generator\GeneratorInterface;
 use Gaufrette\Filesystem;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Message;
+namespace App\Messenger\Message;
 
 class CreateOpenApiDocument
 {

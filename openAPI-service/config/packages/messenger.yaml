@@ -1,10 +1,7 @@
 framework:
     messenger:
         serializer:
-            default_serializer: messenger.transport.symfony_serializer
-            symfony_serializer:
-                format: json
-                context: { }
+            default_serializer: App\Messenger\ExternalJsonMessageSerializer
 
         transports:
             sqs:
@@ -13,6 +10,6 @@ framework:
                     auto_setup: false
 
         routing:
-            'App\Message\CreateOpenApiDocument': sqs
+            'App\Messenger\Message\CreateOpenApiDocument': sqs
 
         # TODO: handle failed messages

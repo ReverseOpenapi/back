@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\MessageHandler;
 
-use App\Message\CreateOpenApiDocument;
+use App\Messenger\Message\CreateOpenApiDocument;
 use Gaufrette\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
