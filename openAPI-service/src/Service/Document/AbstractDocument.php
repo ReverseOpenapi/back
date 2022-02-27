@@ -4,6 +4,7 @@ namespace App\Service\Document;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -33,7 +34,10 @@ abstract class AbstractDocument
      */
     public function toJson(): string
     {
-        return $this->serializer->serialize($this, 'json', [AbstractObjectNormalizer::SKIP_NULL_VALUES => true]);
+        return $this->serializer->serialize($this, 'json', [
+            AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
+            JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+        ]);
     }
 
     /**
