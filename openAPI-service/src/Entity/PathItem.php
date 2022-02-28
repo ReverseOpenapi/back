@@ -39,9 +39,6 @@ class PathItem
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'pathItems')]
     private Collection $tags;
 
-    #[ORM\ManyToOne(targetEntity: SecurityScheme::class)]
-    private ?SecurityScheme $securityScheme;
-
     public function __construct()
     {
         $this->responses = new ArrayCollection();

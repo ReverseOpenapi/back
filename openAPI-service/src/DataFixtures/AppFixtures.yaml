@@ -3,7 +3,6 @@ App\Entity\OpenApiDocument:
     title: 'Petstore'
     paths: ['@pet', '@pet_item']
     tags: ['@pet_tag']
-    securitySchemes: ['@api_key']
     version: '1.0.0'
     userId: 'b842cac0-cbe1-401e-b4bc-97b39c97cc1d'
 
@@ -23,19 +22,16 @@ App\Entity\PathItem:
     summary: 'Add a new pet to the store'
     responses: ['@pet_post_405']
     requestBody: '@pet_post_body'
-    securityScheme: '@api_key'
   pet_get:
     httpMethod: '@get'
     tags: ['@pet_tag']
     summary: 'Find pet by id'
     responses: ['@pet_get_200', '@pet_get_400', '@pet_get_404']
-    securityScheme: '@api_key'
   pet_delete:
     httpMethod: '@delete'
     tags: ['@pet_tag']
     summary: 'Deletes a pet'
     responses: ['@pet_delete_400', '@pet_delete_404']
-    securityScheme: '@api_key'
 
 App\Entity\HttpMethod:
   post:
@@ -113,17 +109,3 @@ App\Entity\RequestBody:
           example: 'available'
     required: true
     description: 'Pet object that needs to be added to the store'
-
-App\Entity\SecurityScheme:
-  api_key:
-    type: '@api_key_type'
-    apiKeyLocation: '@apiKey_location_header'
-    name: 'api_key'
-
-App\Entity\SecurityType:
-  api_key_type:
-    type: 'apiKey'
-
-App\Entity\ApiKeyLocation:
-  apiKey_location_header:
-    location: 'header'

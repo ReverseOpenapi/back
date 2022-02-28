@@ -27,20 +27,16 @@ class OpenApiDocument
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true)]
     private Collection $tags;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: SecurityScheme::class, orphanRemoval: true)]
-    private Collection $securitySchemes;
-
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $UserId;
+    private $userId;
 
     public function __construct()
     {
         $this->paths = new ArrayCollection();
         $this->tags = new ArrayCollection();
-        $this->securitySchemes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,36 +128,6 @@ class OpenApiDocument
         return $this;
     }
 
-    /**
-     * @return Collection|SecurityScheme[]
-     */
-    public function getSecuritySchemes(): Collection
-    {
-        return $this->securitySchemes;
-    }
-
-    public function addSecurityScheme(SecurityScheme $securityScheme): self
-    {
-        if (!$this->securitySchemes->contains($securityScheme)) {
-            $this->securitySchemes[] = $securityScheme;
-            $securityScheme->setOpenApiDocument($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSecurityScheme(SecurityScheme $securityScheme): self
-    {
-        if ($this->securitySchemes->removeElement($securityScheme)) {
-            // set the owning side to null (unless already changed)
-            if ($securityScheme->getOpenApiDocument() === $this) {
-                $securityScheme->setOpenApiDocument(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getVersion(): ?string
     {
         return $this->version;
@@ -176,12 +142,12 @@ class OpenApiDocument
 
     public function getUserId(): ?string
     {
-        return $this->UserId;
+        return $this->userId;
     }
 
-    public function setUserId(string $UserId): self
+    public function setUserId(string $userId): self
     {
-        $this->UserId = $UserId;
+        $this->userId = $userId;
 
         return $this;
     }
