@@ -8,4 +8,6 @@ RUN apt-get update && \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+COPY . .
+
 CMD composer install; php bin/console messenger:consume
