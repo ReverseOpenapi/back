@@ -163,16 +163,4 @@ class PathItem
 
         return $this;
     }
-
-    public function getSecurityScheme(): ?SecurityScheme
-    {
-        return $this->securityScheme;
-    }
-
-    public function setSecurityScheme(?SecurityScheme $securityScheme): self
-    {
-        $this->securityScheme = $securityScheme;
-
-        return $this;
-    }
 }
