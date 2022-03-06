@@ -2,3 +2,4 @@ framework:
     messenger:
         transports:
             sqs: 'sync://'
+            sqs_dead_letter_queue: 'sync://'
