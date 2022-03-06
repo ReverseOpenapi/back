@@ -1,11 +1,11 @@
-resource "aws_ecs_cluster" "prod" {
+resource "aws_ecs_cluster" "reverse_openapi" {
   name = "${var.prefix}-reverse-openapi"
 }
 
-resource "aws_ecs_service" "prod" {
+resource "aws_ecs_service" "reverse_openapi" {
   name            = "${var.prefix}-openapi-service"
-  cluster         = aws_ecs_cluster.prod.arn
-  task_definition = aws_ecs_task_definition.prod.arn
+  cluster         = aws_ecs_cluster.reverse_openapi.arn
+  task_definition = aws_ecs_task_definition.reverse_openapi.arn
   desired_count   = 1
   launch_type     = "FARGATE"
 
@@ -19,7 +19,7 @@ resource "aws_ecs_service" "prod" {
   }
 }
 
-resource "aws_ecs_task_definition" "prod" {
+resource "aws_ecs_task_definition" "reverse_openapi" {
   family                   = "${var.prefix}-openapi-service"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "prod" {
   container_definitions = jsonencode([
     {
       name      = "${var.prefix}-openapi-service"
-      image     = aws_ecr_repository.prod.repository_url
+      image     = aws_ecr_repository.reverse_openapi.repository_url
       cpu       = 256
       memory    = 512
       essential = true

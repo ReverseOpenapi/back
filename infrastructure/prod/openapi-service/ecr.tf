@@ -1,3 +1,3 @@
-resource "aws_ecr_repository" "prod" {
+resource "aws_ecr_repository" "reverse_openapi" {
   name = "${var.prefix}-openapi-service"
 }
