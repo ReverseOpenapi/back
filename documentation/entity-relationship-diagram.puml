@@ -1,0 +1,138 @@
+@startuml Reverse OpenAPI entity relationship diagram
+
+' see https://plantuml.com/fr/ to generate a diagram from this file
+
+' This model is satisfying 3NF (https://en.wikipedia.org/wiki/Database_normalization)
+
+' Store schemas created by our modeling tool
+' https://swagger.io/specification/#schema-object
+class Schema {
+    {field} id: Int
+    {field} user: ???
+    {field} content: json
+}
+
+' Root of the OpenAPI document created by the user
+' https://swagger.io/specification/#openapi-object
+class OpenApiDocument {
+    {field} id: Int
+    {field} user:  ???
+    {field} title: String
+    {field} description: ?String
+}
+
+' https://swagger.io/specification/#paths-object
+class Path {
+    {field} id: Int
+    {field} endpoint: String
+}
+
+' https://swagger.io/specification/#path-item-object and https://swagger.io/specification/#operation-object combined for simplification
+class PathItem {
+    {field} id: Int
+    {field} summary: ?String
+    {field} description: ?String
+}
+
+' https://swagger.io/specification/#security-scheme-object
+class SecurityScheme {
+    {field} id: Int
+    {field} description: ?String
+    {field} name: ?String
+    {field} scheme: ?String
+    {field} bearerFormat: ?String
+    {field} openIdConnectUrl: ?String
+}
+
+' https://swagger.io/specification/#security-scheme-object -> see field "type"
+class SecurityType {
+    {field} id: Int
+    {field} type: String
+}
+
+' https://swagger.io/specification/#security-scheme-object -> see field "in"
+class ApiKeyLocation {
+    {field} id: Int
+    {field} location: String
+}
+
+' https://swagger.io/specification/#oauth-flows-object
+class OAuthFlow {
+    {field} id: Int
+    {field} authorizationUrl: String
+    {field} tokenUrl: String
+    {field} refreshUrl: ?String
+}
+
+' https://swagger.io/specification/#oauth-flow-object -> see field "scopes"
+class OAuthScope {
+    {field} name: String
+    {field} description: String
+}
+
+' https://swagger.io/specification/#oauth-flows-object -> all fields names are types
+class OAuthFlowType {
+    {field} id: Int
+    {field} type: String
+}
+
+' https://swagger.io/specification/#tag-object
+class Tag {
+    {field} id: Int
+    {field} name: String
+    {field} description: ?String
+}
+
+' https://swagger.io/specification/#request-body-object
+class RequestBody {
+    {field} id: Int
+    {field} content: Json
+    {field} required: Boolean
+    {field} description: ?String
+}
+
+' https://swagger.io/specification/#parameter-object
+class Parameter {
+    {field} id: Int
+    {field} name: String
+    {field} description: ?String
+    {field} required: Boolean
+}
+
+' https://swagger.io/specification/#parameter-object -> refers to "in" field name
+class ParameterLocation {
+    {field} id: Int
+    {field} location: String
+}
+
+' https://swagger.io/specification/#response-object
+class HttpResponse {
+    {field} id: Int
+    {field} httpStatusCode: Int
+    {field} description: ?String
+    {field} content: ?Json
+}
+
+class HttpMethod {
+    {field} id: Int
+    {field} method: String
+}
+
+OpenApiDocument "1..n" -- "1,1" Path /' OpenApiDocument has one or many Path, Path has one OpenAPIDocument '/
+Path "0..n" -- "1,1" Parameter /' Path has zero or many Parameter, Parameter has one Path '/
+PathItem "0..n" -- "1,1" Parameter /' PathItem has zero or many Parameter, Parameter has one PathItem '/
+PathItem "1..n" -- "1,1" HttpResponse /' PathItem has one or many HttpResponse, HttpResponse has one Pathitem '/
+PathItem "1,1" -- "0..n" HttpMethod /' PathItem has one HttpMethod, HttpMethod has zero or many PathItem '/
+Path "1..n" -- "1,1" PathItem /' Path has zero or many PathItem, PathItem has one Path '/
+ParameterLocation "0..n" -- "1,1" Parameter /' ParameterLocation has zero or many Parameter, Parameter has one ParameterLocation '/
+RequestBody "1,1" -- "0,1" PathItem /' RequestBody has one PathItem, PathItem has zero or one PathItem '/
+Tag "1,1" -- "0..n" OpenApiDocument /' Tag has one OpenApiDocument, OpenApiDocument has zero or many Tag '/
+Tag "1..n" -- "0..n" PathItem /' Tag has one or many PathItem, PathItem has zero or many PathItem '/
+SecurityScheme "1,1" -- "0..n" OpenApiDocument /' SecurityScheme has one OpenApiDocument, OpenApiDocument has zero or many SecurityScheme '/
+OAuthFlow "1,1" -- "0..n" SecurityScheme /' OAuthFlow has one SecurityScheme, SecurityScheme has zero or many OAuthFlow '/
+OAuthFlowType "0..n" -- "1,1" OAuthFlow /' OAuthFlowType has zero or many OAuthFlow, OAuthFlow has one OAuthFlowType '/
+OAuthScope "1,1" -- "1..n" OAuthFlow /' OAuthScope has one OAuthFlow, OAuthFlow has one or many OAuthScope '/
+SecurityScheme "0..n" -- "1,0" PathItem /' SecurityScheme has zero or many PathItem, PathItem has one or zero SecurityScheme '/
+SecurityScheme "1,1" -- "0..n" SecurityType /' SecurityScheme has one SecurityType, SecurityType has zero or many SecurityType '/
+
+@enduml
