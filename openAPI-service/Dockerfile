@@ -10,4 +10,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY . .
 
-CMD composer install; php bin/console messenger:consume
+CMD composer install; php bin/console messenger:consume sqs
