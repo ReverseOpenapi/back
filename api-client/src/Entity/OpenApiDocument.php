@@ -6,20 +6,27 @@ use App\Repository\OpenApiDocumentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: OpenApiDocumentRepository::class)]
 class OpenApiDocument
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class:UuidGenerator::class)]
+    private $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
-    private string $title;
+    private $title;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
+    private $description;
 
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true)]
     private Collection $paths;
@@ -27,45 +34,34 @@ class OpenApiDocument
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true)]
     private Collection $tags;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $userId;
 
-    public function __construct()
+    public function __construct(array $data = [])
     {
+
+        if (count($data)) {
+            $this->title        = $data['title'] ?? null;
+            $this->description  = $data['description'] ?? '';
+            $this->version      = $data['version'] ?? null;
+            $this->userId       = $data['userId'] ?? null;
+        }
+
         $this->paths = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+
+    public function getId() {
+
         return $this->id;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
     }
 
     /**
@@ -124,30 +120,6 @@ class OpenApiDocument
                 $tag->setOpenApiDocument(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getVersion(): ?string
-    {
-        return $this->version;
-    }
-
-    public function setVersion(string $version): self
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(string $userId): self
-    {
-        $this->userId = $userId;
 
         return $this;
     }
