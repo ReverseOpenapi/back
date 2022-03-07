@@ -30,6 +30,8 @@ services:
     functionnal-test-service:
          container_name: reverse-openapi_functionnal-test-service
          build: ./functionnal-test-service
+         environment:
+           DB_HOST: reverse-openapi_db
          volumes:
              - "./functionnal-test-service:/app"
          links:
