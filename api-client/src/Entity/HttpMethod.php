@@ -2,32 +2,19 @@
 
 namespace App\Entity;
 
+use App\Repository\HttpMethodRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * HttpMethod
- *
- * @ORM\Table(name="http_method")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\HttpMethodRepository")
- */
+#[ORM\Entity(repositoryClass: HttpMethodRepository::class)]
 class HttpMethod
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="method", type="string", length=255, nullable=false)
-     */
-    private $method;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $method;
 
     public function getId(): ?int
     {
@@ -45,6 +32,4 @@ class HttpMethod
 
         return $this;
     }
-
-
 }

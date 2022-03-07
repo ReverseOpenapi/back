@@ -2,32 +2,19 @@
 
 namespace App\Entity;
 
+use App\Repository\ParameterLocationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * ParameterLocation
- *
- * @ORM\Table(name="parameter_location")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\ParameterLocationRepository")
- */
+#[ORM\Entity(repositoryClass: ParameterLocationRepository::class)]
 class ParameterLocation
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="location", type="string", length=255, nullable=false)
-     */
-    private $location;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $location;
 
     public function getId(): ?int
     {
@@ -45,6 +32,4 @@ class ParameterLocation
 
         return $this;
     }
-
-
 }

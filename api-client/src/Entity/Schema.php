@@ -2,49 +2,43 @@
 
 namespace App\Entity;
 
+use App\Repository\SchemaRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Schema
- *
- * @ORM\Table(name="schema")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\SchemaRepository")
- */
+#[ORM\Entity(repositoryClass: SchemaRepository::class)]
 class Schema
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="content", type="json", nullable=false)
+     * @var array<mixed>
      */
-    private $content;
+    #[ORM\Column(type: 'json')]
+    private array $content = [];
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getContent(): ?array
     {
         return $this->content;
     }
 
+    /**
+     * @param array<mixed> $content
+     */
     public function setContent(array $content): self
     {
         $this->content = $content;
 
         return $this;
     }
-
-
 }

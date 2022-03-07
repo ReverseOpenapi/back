@@ -2,73 +2,35 @@
 
 namespace App\Entity;
 
+use App\Repository\ParameterRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Parameter
- *
- * @ORM\Table(name="parameter", indexes={@ORM\Index(name="IDX_2A97911064D218E", columns={"location_id"}), @ORM\Index(name="IDX_2A979110D96C566B", columns={"path_id"})})
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\ParameterRepository")
- */
+#[ORM\Entity(repositoryClass: ParameterRepository::class)]
 class Parameter
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=0, nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="required", type="boolean", nullable=false)
-     */
-    private $required;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $required;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     */
-    private $name;
+    #[ORM\ManyToOne(targetEntity: ParameterLocation::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ParameterLocation $location;
 
-    /**
-     * @var array
-     *
-     * @ORM\Column(name="parameter_schema", type="json", nullable=false)
-     */
-    private $parameterSchema;
+    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'parameters')]
+    private ?Path $path;
 
-    /**
-     * @var \ParameterLocation
-     *
-     * @ORM\ManyToOne(targetEntity="ParameterLocation")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
-     * })
-     */
-    private $location;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $name;
 
-    /**
-     * @var \Path
-     *
-     * @ORM\ManyToOne(targetEntity="Path")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="path_id", referencedColumnName="id")
-     * })
-     */
-    private $path;
+    #[ORM\Column(type: 'json')]
+    private array $parameterSchema = [];
 
     public function getId(): ?int
     {
@@ -99,30 +61,6 @@ class Parameter
         return $this;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getParameterSchema(): ?array
-    {
-        return $this->parameterSchema;
-    }
-
-    public function setParameterSchema(array $parameterSchema): self
-    {
-        $this->parameterSchema = $parameterSchema;
-
-        return $this;
-    }
-
     public function getLocation(): ?ParameterLocation
     {
         return $this->location;
@@ -147,5 +85,27 @@ class Parameter
         return $this;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
 
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getParameterSchema(): ?array
+    {
+        return $this->parameterSchema;
+    }
+
+    public function setParameterSchema(array $parameterSchema): self
+    {
+        $this->parameterSchema = $parameterSchema;
+
+        return $this;
+    }
 }

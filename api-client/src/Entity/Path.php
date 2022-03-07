@@ -2,58 +2,41 @@
 
 namespace App\Entity;
 
+use App\Repository\PathRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Path
- *
- * @ORM\Table(name="path", indexes={@ORM\Index(name="IDX_B548B0F2D58E2A8", columns={"open_api_document_id"})})
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\PathRepository")
- */
+#[ORM\Entity(repositoryClass: PathRepository::class)]
 class Path
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="endpoint", type="string", length=255, nullable=false)
-     */
-    private $endpoint;
+    #[ORM\ManyToOne(targetEntity: OpenApiDocument::class, inversedBy: 'paths')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?OpenApiDocument $openApiDocument;
 
-    /**
-     * @var \OpenApiDocument
-     *
-     * @ORM\ManyToOne(targetEntity="OpenApiDocument")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="open_api_document_id", referencedColumnName="id")
-     * })
-     */
-    private $openApiDocument;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $endpoint;
+
+    #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true)]
+    private Collection $items;
+
+    #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class)]
+    private Collection $parameters;
+
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+        $this->parameters = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getEndpoint(): ?string
-    {
-        return $this->endpoint;
-    }
-
-    public function setEndpoint(string $endpoint): self
-    {
-        $this->endpoint = $endpoint;
-
-        return $this;
     }
 
     public function getOpenApiDocument(): ?OpenApiDocument
@@ -68,5 +51,75 @@ class Path
         return $this;
     }
 
+    public function getEndpoint(): ?string
+    {
+        return $this->endpoint;
+    }
 
+    public function setEndpoint(string $endpoint): self
+    {
+        $this->endpoint = $endpoint;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PathItem[]
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(PathItem $pathItem): self
+    {
+        if (!$this->items->contains($pathItem)) {
+            $this->items[] = $pathItem;
+            $pathItem->setPath($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(PathItem $pathItem): self
+    {
+        if ($this->items->removeElement($pathItem)) {
+            // set the owning side to null (unless already changed)
+            if ($pathItem->getPath() === $this) {
+                $pathItem->setPath(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Parameter[]
+     */
+    public function getParameters(): Collection
+    {
+        return $this->parameters;
+    }
+
+    public function addParameter(Parameter $parameter): self
+    {
+        if (!$this->parameters->contains($parameter)) {
+            $this->parameters[] = $parameter;
+            $parameter->setPath($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParameter(Parameter $parameter): self
+    {
+        if ($this->parameters->removeElement($parameter)) {
+            // set the owning side to null (unless already changed)
+            if ($parameter->getPath() === $this) {
+                $parameter->setPath(null);
+            }
+        }
+
+        return $this;
+    }
 }

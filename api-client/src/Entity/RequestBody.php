@@ -2,57 +2,48 @@
 
 namespace App\Entity;
 
+use App\Repository\RequestBodyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * RequestBody
- *
- * @ORM\Table(name="request_body")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\RequestBodyRepository")
- */
+#[ORM\Entity(repositoryClass: RequestBodyRepository::class)]
 class RequestBody
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="content", type="json", nullable=false)
+     * @var array<mixed>
      */
-    private $content;
+    #[ORM\Column(type: 'json')]
+    private array $content = [];
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="required", type="boolean", nullable=false)
-     */
-    private $required;
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $required = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=0, nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\OneToOne(mappedBy: 'requestBody', targetEntity: PathItem::class, cascade: ['persist', 'remove'])]
+    private ?PathItem $pathItem;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getContent(): ?array
     {
         return $this->content;
     }
 
+    /**
+     * @param array<mixed> $content
+     */
     public function setContent(array $content): self
     {
         $this->content = $content;
@@ -84,5 +75,25 @@ class RequestBody
         return $this;
     }
 
+    public function getPathItem(): ?PathItem
+    {
+        return $this->pathItem;
+    }
 
+    public function setPathItem(?PathItem $pathItem): self
+    {
+        // unset the owning side of the relation if necessary
+        if (null === $pathItem && null !== $this->pathItem) {
+            $this->pathItem->setRequestBody(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if (null !== $pathItem && $pathItem->getRequestBody() !== $this) {
+            $pathItem->setRequestBody($this);
+        }
+
+        $this->pathItem = $pathItem;
+
+        return $this;
+    }
 }

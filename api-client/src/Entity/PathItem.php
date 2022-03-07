@@ -2,98 +2,64 @@
 
 namespace App\Entity;
 
+use App\Repository\PathItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * PathItem
- *
- * @ORM\Table(name="path_item", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_7277AC49B1466FD3", columns={"request_body_id"})}, indexes={@ORM\Index(name="IDX_7277AC497A82E6BE", columns={"http_method_id"}), @ORM\Index(name="IDX_7277AC49D96C566B", columns={"path_id"})})
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\PathItemRepository")
- */
+#[ORM\Entity(repositoryClass: PathItemRepository::class)]
 class PathItem
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="summary", type="text", length=0, nullable=true)
-     */
-    private $summary;
+    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'pathItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Path $path;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=0, nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $summary;
 
-    /**
-     * @var \HttpMethod
-     *
-     * @ORM\ManyToOne(targetEntity="HttpMethod")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="http_method_id", referencedColumnName="id")
-     * })
-     */
-    private $httpMethod;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description;
 
-    /**
-     * @var \RequestBody
-     *
-     * @ORM\ManyToOne(targetEntity="RequestBody")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="request_body_id", referencedColumnName="id")
-     * })
-     */
-    private $requestBody;
+    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true)]
+    private Collection $responses;
 
-    /**
-     * @var \Path
-     *
-     * @ORM\ManyToOne(targetEntity="Path")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="path_id", referencedColumnName="id")
-     * })
-     */
-    private $path;
+    #[ORM\ManyToOne(targetEntity: HttpMethod::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?HttpMethod $httpMethod;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="pathItem")
-     * @ORM\JoinTable(name="path_item_tag",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="path_item_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="tag_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $tag;
+    // TODO: why is requestBody not initialized when lazy loaded and getter is called by hydrator ?
+    #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    private ?RequestBody $requestBody;
 
-    /**
-     * Constructor
-     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'pathItems')]
+    private Collection $tags;
+
     public function __construct()
     {
-        $this->tag = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->responses = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPath(): ?Path
+    {
+        return $this->path;
+    }
+
+    public function setPath(?Path $path): self
+    {
+        $this->path = $path;
+
+        return $this;
     }
 
     public function getSummary(): ?string
@@ -116,6 +82,36 @@ class PathItem
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|HttpResponse[]
+     */
+    public function getResponses(): Collection
+    {
+        return $this->responses;
+    }
+
+    public function addResponse(HttpResponse $response): self
+    {
+        if (!$this->responses->contains($response)) {
+            $this->responses[] = $response;
+            $response->setPathItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResponse(HttpResponse $response): self
+    {
+        if ($this->responses->removeElement($response)) {
+            // set the owning side to null (unless already changed)
+            if ($response->getPathItem() === $this) {
+                $response->setPathItem(null);
+            }
+        }
 
         return $this;
     }
@@ -144,30 +140,18 @@ class PathItem
         return $this;
     }
 
-    public function getPath(): ?Path
-    {
-        return $this->path;
-    }
-
-    public function setPath(?Path $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Tag>
+     * @return Collection|Tag[]
      */
-    public function getTag(): Collection
+    public function getTags(): Collection
     {
-        return $this->tag;
+        return $this->tags;
     }
 
     public function addTag(Tag $tag): self
     {
-        if (!$this->tag->contains($tag)) {
-            $this->tag[] = $tag;
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
         }
 
         return $this;
@@ -175,9 +159,8 @@ class PathItem
 
     public function removeTag(Tag $tag): self
     {
-        $this->tag->removeElement($tag);
+        $this->tags->removeElement($tag);
 
         return $this;
     }
-
 }

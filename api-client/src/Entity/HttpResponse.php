@@ -2,56 +2,32 @@
 
 namespace App\Entity;
 
+use App\Repository\HttpResponseRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * HttpResponse
- *
- * @ORM\Table(name="http_response", indexes={@ORM\Index(name="IDX_32C80BE6D5D96477", columns={"path_item_id"})})
- * @ORM\Entity
- * * @ORM\Entity(repositoryClass="App\Repository\HttpResponseRepository")
- */
+#[ORM\Entity(repositoryClass: HttpResponseRepository::class)]
 class HttpResponse
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id;
+
+    #[ORM\Column(type: 'integer')]
+    private ?int $httpStatusCode;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="http_status_code", type="integer", nullable=false)
+     * @var array<mixed>
      */
-    private $httpStatusCode;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $content = [];
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=0, nullable=true)
-     */
-    private $description;
-
-    /**
-     * @var array|null
-     *
-     * @ORM\Column(name="content", type="json", nullable=true)
-     */
-    private $content;
-
-    /**
-     * @var \PathItem
-     *
-     * @ORM\ManyToOne(targetEntity="PathItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="path_item_id", referencedColumnName="id")
-     * })
-     */
-    private $pathItem;
+    #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'responses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PathItem $pathItem;
 
     public function getId(): ?int
     {
@@ -82,11 +58,17 @@ class HttpResponse
         return $this;
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getContent(): ?array
     {
         return $this->content;
     }
 
+    /**
+     * @param array<mixed>|null $content
+     */
     public function setContent(?array $content): self
     {
         $this->content = $content;
@@ -105,6 +87,4 @@ class HttpResponse
 
         return $this;
     }
-
-
 }

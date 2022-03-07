@@ -2,60 +2,49 @@
 
 namespace App\Entity;
 
+use App\Repository\OpenApiDocumentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * OpenApiDocument
- *
- * @ORM\Table(name="open_api_document")
- * @ORM\Entity
- * @ORM\Entity(repositoryClass="App\Repository\OpenApiDocumentRepository")
- */
+#[ORM\Entity(repositoryClass: OpenApiDocumentRepository::class)]
 class OpenApiDocument
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
-     */
-    private $title;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $title;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", length=0, nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="version", type="string", length=255, nullable=false)
-     */
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true)]
+    private Collection $paths;
+
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true)]
+    private Collection $tags;
+
+    #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="user_id", type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(type: 'string', length: 255)]
     private $userId;
+
+    public function __construct()
+    {
+        $this->paths = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -75,6 +64,66 @@ class OpenApiDocument
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Path[]
+     */
+    public function getPaths(): Collection
+    {
+        return $this->paths;
+    }
+
+    public function addPath(Path $path): self
+    {
+        if (!$this->paths->contains($path)) {
+            $this->paths[] = $path;
+            $path->setOpenApiDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removePath(Path $path): self
+    {
+        if ($this->paths->removeElement($path)) {
+            // set the owning side to null (unless already changed)
+            if ($path->getOpenApiDocument() === $this) {
+                $path->setOpenApiDocument(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->setOpenApiDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            // set the owning side to null (unless already changed)
+            if ($tag->getOpenApiDocument() === $this) {
+                $tag->setOpenApiDocument(null);
+            }
+        }
 
         return $this;
     }
@@ -102,6 +151,4 @@ class OpenApiDocument
 
         return $this;
     }
-
-
 }
