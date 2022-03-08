@@ -23,14 +23,14 @@ class Path
     private ?string $endpoint;
 
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true)]
-    private Collection $items;
+    private Collection $pathItems;
 
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class)]
     private Collection $parameters;
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
+        $this->pathItems = new ArrayCollection();
         $this->parameters = new ArrayCollection();
     }
 
@@ -66,24 +66,24 @@ class Path
     /**
      * @return Collection|PathItem[]
      */
-    public function getItems(): Collection
+    public function getPathItems(): Collection
     {
-        return $this->items;
+        return $this->pathItems;
     }
 
-    public function addItem(PathItem $pathItem): self
+    public function addPathItem(PathItem $pathItem): self
     {
-        if (!$this->items->contains($pathItem)) {
-            $this->items[] = $pathItem;
+        if (!$this->pathItems->contains($pathItem)) {
+            $this->pathItems[] = $pathItem;
             $pathItem->setPath($this);
         }
 
         return $this;
     }
 
-    public function removeItem(PathItem $pathItem): self
+    public function removePathItem(PathItem $pathItem): self
     {
-        if ($this->items->removeElement($pathItem)) {
+        if ($this->pathItems->removeElement($pathItem)) {
             // set the owning side to null (unless already changed)
             if ($pathItem->getPath() === $this) {
                 $pathItem->setPath(null);

@@ -80,7 +80,7 @@ class Generator implements GeneratorInterface
         $pathBuilderObject = new PathBuilderObject();
         $pathBuilderObject->setEndpoint($path->getEndpoint());
 
-        foreach ($path->getItems() as $pathItem) {
+        foreach ($path->getPathItems() as $pathItem) {
             $pathItemBuilder = $this->getPathItemBuilderObject($pathItem);
             $pathBuilderObject->addPathItem($pathItemBuilder);
         }
