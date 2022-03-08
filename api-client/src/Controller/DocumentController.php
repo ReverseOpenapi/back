@@ -12,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Utils\Validator;
 use App\Repository\OpenApiDocumentRepository;
 use Ramsey\Uuid\Uuid;
+use App\Entity\Tag;
 
 #[Route('/document')]
 class DocumentController extends AbstractController
@@ -33,16 +34,39 @@ class DocumentController extends AbstractController
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $errors = [];
+
+        if(isset($data['tags']) && count($data['tags'])){
+            $tags = [];
+
+            foreach ($data['tags'] as $key => $tag) {
+                $tag = new Tag($tag);
+
+                $tagErrors = $validator->getErrors($tag);
+
+                if (count($tagErrors)) {
+                    $errors[] = ['index' => $key, 'type' => 'tag', 'errors' => $tagErrors];
+                    continue;
+                }
+
+                $document->addTag($tag);
+            }
+        }
+
         $em = $doctrine->getManager();
 
         $em->persist($document);
 
         $em->flush();
 
-        return new JsonResponse([
+        $responseData = [
             'success'    => true,
             'data'      => ['id' => $document->getId()]
-        ], Response::HTTP_OK);
+        ];
+
+        if (count($errors)) $responseData['errors'] = $errors;
+
+        return new JsonResponse($responseData, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'document_read')]
