@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Utils\Validator;
 use App\Repository\OpenApiDocumentRepository;
 use Ramsey\Uuid\Uuid;
-use App\Entity\{Tag, Path, OpenApiDocument};
+use App\Entity\{Tag, Path, PathItem, OpenApiDocument};
 
 #[Route('/document')]
 class DocumentController extends AbstractController
@@ -52,16 +52,37 @@ class DocumentController extends AbstractController
         if(isset($data['paths']) && count($data['paths'])){
 
             foreach ($data['paths'] as $key => $path) {
-                $path = new Path($path);
 
-                $pathErrors = $validator->getErrors($path);
+                if(!(isset($path['pathItems']) && count($path['pathItems']))) continue;
+
+                $pathEntity = new Path($path);
+
+                $pathErrors = $validator->getErrors($pathEntity);
 
                 if (count($pathErrors)) {
                     $errors[] = ['index' => $key, 'type' => 'paths', 'errors' => $pathErrors];
                     continue;
                 }
 
-                $document->addPath($path);
+                if (isset($path['pathItems']) && count($path['pathItems'])) {
+
+                    foreach ($path['pathItems'] as $pathItemsKey => $pathItem) {
+
+                        $pathItemEntity = new PathItem($pathItem);
+
+                        $pathItemErrors = $validator->getErrors($pathItemEntity);
+
+                        if (count($pathItemErrors)) {
+                            $errors[] = ['index' => $key, 'type' => 'paths.pathItems', 'errors' => $pathItemErrors];
+                            continue;
+                        }
+
+                        $pathEntity->addPathItem($pathItemEntity);
+                    }
+                }
+
+
+                $document->addPath($pathEntity);
             }
         }
 

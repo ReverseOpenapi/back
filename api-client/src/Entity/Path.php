@@ -25,8 +25,8 @@ class Path
     #[ORM\Column(type: 'string', length: 255)]
     private $endpoint;
 
-    #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true)]
-    private Collection $items;
+    #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true, cascade: ["persist"])]
+    private Collection $pathItems;
 
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class)]
     private Collection $parameters;
@@ -38,7 +38,7 @@ class Path
             $this->endpoint = $data['endpoint'] ?? null;
         }
 
-        $this->items = new ArrayCollection();
+        $this->pathItems = new ArrayCollection();
         $this->parameters = new ArrayCollection();
     }
 
@@ -62,24 +62,24 @@ class Path
     /**
      * @return Collection|PathItem[]
      */
-    public function getItems(): Collection
+    public function getpathItems(): Collection
     {
-        return $this->items;
+        return $this->pathItems;
     }
 
-    public function addItem(PathItem $pathItem): self
+    public function addPathItem(PathItem $pathItem): self
     {
-        if (!$this->items->contains($pathItem)) {
-            $this->items[] = $pathItem;
+        if (!$this->pathItems->contains($pathItem)) {
+            $this->pathItems[] = $pathItem;
             $pathItem->setPath($this);
         }
 
         return $this;
     }
 
-    public function removeItem(PathItem $pathItem): self
+    public function removePathItem(PathItem $pathItem): self
     {
-        if ($this->items->removeElement($pathItem)) {
+        if ($this->pathItems->removeElement($pathItem)) {
             // set the owning side to null (unless already changed)
             if ($pathItem->getPath() === $this) {
                 $pathItem->setPath(null);
@@ -120,8 +120,12 @@ class Path
     }
 
     public function toArray() {
+        // dd($this->pathItems->toArray());
         return [
-            'endpoint' => $this->endpoint
+            'endpoint'          => $this->endpoint,
+            'pathItems'         => array_map(function ($pathItem) {
+                return $pathItem->toArray();
+            }, $this->pathItems->toArray()),
         ];
     }
 }

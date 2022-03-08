@@ -6,6 +6,7 @@ use App\Repository\PathItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PathItemRepository::class)]
 class PathItem
@@ -20,27 +21,45 @@ class PathItem
     private ?Path $path;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $summary;
+    private $summary;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description;
+    private $description;
 
     #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true)]
     private Collection $responses;
 
-    #[ORM\ManyToOne(targetEntity: HttpMethod::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?HttpMethod $httpMethod;
+    #[Assert\NotBlank]
+    #[Assert\Choice([
+        'GET',
+        'POST',
+        'DELETE',
+        'PATCH',
+        'PUT',
+        'HEAD',
+        'CONNECT',
+        'OPTIONS',
+        'TRACE'
+    ])]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $httpMethod;
 
-    // TODO: why is requestBody not initialized when lazy loaded and getter is called by hydrator ?
     #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?RequestBody $requestBody;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'pathItems')]
     private Collection $tags;
 
-    public function __construct()
+
+    public function __construct(array $data = [])
     {
+        if(count($data)){
+
+            $this->summary      = $data['summary'] ?? null;
+            $this->description  = $data['description'] ?? null;
+            $this->httpMethod   = $data['httpMethod'] ?? null;
+        }
+
         $this->responses = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -116,18 +135,6 @@ class PathItem
         return $this;
     }
 
-    public function getHttpMethod(): ?HttpMethod
-    {
-        return $this->httpMethod;
-    }
-
-    public function setHttpMethod(?HttpMethod $httpMethod): self
-    {
-        $this->httpMethod = $httpMethod;
-
-        return $this;
-    }
-
     public function getRequestBody(): ?RequestBody
     {
         return $this->requestBody;
@@ -162,5 +169,13 @@ class PathItem
         $this->tags->removeElement($tag);
 
         return $this;
+    }
+
+    public function toArray() {
+        return [
+            'summary'       => $this->summary,
+            'description'   => $this->description,
+            'httpMethod'    => $this->httpMethod,
+        ];
     }
 }

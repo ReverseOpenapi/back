@@ -28,10 +28,10 @@ class OpenApiDocument
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $paths;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade:["persist"])]
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $tags;
 
     #[Assert\NotBlank]
