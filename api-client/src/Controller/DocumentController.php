@@ -28,7 +28,7 @@ class DocumentController extends AbstractController
 
         if(count($errors)) {
             return new JsonResponse([
-                'sucess' => false,
+                'success' => false,
                 'errors' => $errors
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -40,22 +40,22 @@ class DocumentController extends AbstractController
         $em->flush();
 
         return new JsonResponse([
-            'sucess'    => true,
-            'data'      => $document->getId()
+            'success'    => true,
+            'data'      => ['id' => $document->getId()]
         ], Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'document_read')]
     public function read(string $id, OpenApiDocumentRepository $repo){
 
-        if (!Uuid::isValid($id)) return new JsonResponse([ 'sucess' => false ], Response::HTTP_UNAUTHORIZED);
+        if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
         $document = $repo->find($id);
 
-        if (!$document) return new JsonResponse([ 'sucess' => false ], Response::HTTP_NOT_FOUND);
+        if (!$document) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
         return new JsonResponse([
-            'sucess'    => true,
+            'success'    => true,
             'data'      => $document->toArray()
         ], Response::HTTP_OK);
     }
