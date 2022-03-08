@@ -87,7 +87,7 @@ class Generator implements GeneratorInterface
 
         foreach ($path->getParameters() as $parameter) {
             $parameterBuildObject = $this->hydrator->hydrateFromObject($parameter, new ParameterBuilderObject());
-            $parameterBuildObject->setLocation($parameter->getLocation()->getLocation())
+            $parameterBuildObject->setLocation($parameter->getLocation())
                 ->setSchema($parameter->getParameterSchema());
             $pathBuilderObject->addParameter($parameterBuildObject);
         }

@@ -19,9 +19,8 @@ class Parameter
     #[ORM\Column(type: 'boolean')]
     private ?bool $required;
 
-    #[ORM\ManyToOne(targetEntity: ParameterLocation::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ParameterLocation $location;
+    #[ORM\Column(type: 'string', length: 6)]
+    private string $location;
 
     #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'parameters')]
     private ?Path $path;
@@ -61,12 +60,12 @@ class Parameter
         return $this;
     }
 
-    public function getLocation(): ?ParameterLocation
+    public function getLocation(): string
     {
         return $this->location;
     }
 
-    public function setLocation(?ParameterLocation $location): self
+    public function setLocation(string $location): self
     {
         $this->location = $location;
 

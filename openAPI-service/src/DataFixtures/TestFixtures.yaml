@@ -51,15 +51,11 @@ App\Entity\Tag:
 App\Entity\Parameter:
   pet_get_id:
     name: 'id'
-    location: '@path'
+    location: 'path'
     description: 'ID of pet to return'
     required: true
     parameterSchema:
       type: 'integer'
-
-App\Entity\ParameterLocation:
-  path:
-    location: 'path'
 
 App\Entity\RequestBody:
   pet_put_body:
