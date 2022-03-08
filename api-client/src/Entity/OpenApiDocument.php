@@ -28,7 +28,7 @@ class OpenApiDocument
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade:["persist"])]
     private Collection $paths;
 
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade:["persist"])]
@@ -134,6 +134,9 @@ class OpenApiDocument
             'tags'              => array_map(function ($tag) {
                 return $tag->toArray();
             }, $this->tags->toArray()),
+            'paths'              => array_map(function ($path) {
+                return $path->toArray();
+            }, $this->paths->toArray()),
         ];
     }
 }

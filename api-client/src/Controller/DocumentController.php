@@ -3,16 +3,13 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{JsonResponse, Response, Request};
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\OpenApiDocument;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Utils\Validator;
 use App\Repository\OpenApiDocumentRepository;
 use Ramsey\Uuid\Uuid;
-use App\Entity\Tag;
+use App\Entity\{Tag, Path, OpenApiDocument};
 
 #[Route('/document')]
 class DocumentController extends AbstractController
@@ -37,7 +34,6 @@ class DocumentController extends AbstractController
         $errors = [];
 
         if(isset($data['tags']) && count($data['tags'])){
-            $tags = [];
 
             foreach ($data['tags'] as $key => $tag) {
                 $tag = new Tag($tag);
@@ -45,11 +41,27 @@ class DocumentController extends AbstractController
                 $tagErrors = $validator->getErrors($tag);
 
                 if (count($tagErrors)) {
-                    $errors[] = ['index' => $key, 'type' => 'tag', 'errors' => $tagErrors];
+                    $errors[] = ['index' => $key, 'type' => 'tags', 'errors' => $tagErrors];
                     continue;
                 }
 
                 $document->addTag($tag);
+            }
+        }
+
+        if(isset($data['paths']) && count($data['paths'])){
+
+            foreach ($data['paths'] as $key => $path) {
+                $path = new Path($path);
+
+                $pathErrors = $validator->getErrors($path);
+
+                if (count($pathErrors)) {
+                    $errors[] = ['index' => $key, 'type' => 'paths', 'errors' => $pathErrors];
+                    continue;
+                }
+
+                $document->addPath($path);
             }
         }
 

@@ -6,6 +6,7 @@ use App\Repository\PathRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PathRepository::class)]
 class Path
@@ -19,8 +20,10 @@ class Path
     #[ORM\JoinColumn(nullable: false)]
     private ?OpenApiDocument $openApiDocument;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
-    private ?string $endpoint;
+    private $endpoint;
 
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true)]
     private Collection $items;
@@ -28,8 +31,13 @@ class Path
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class)]
     private Collection $parameters;
 
-    public function __construct()
+    public function __construct(array $data = [])
     {
+
+        if (count($data)) {
+            $this->endpoint = $data['endpoint'] ?? null;
+        }
+
         $this->items = new ArrayCollection();
         $this->parameters = new ArrayCollection();
     }
@@ -47,18 +55,6 @@ class Path
     public function setOpenApiDocument(?OpenApiDocument $openApiDocument): self
     {
         $this->openApiDocument = $openApiDocument;
-
-        return $this;
-    }
-
-    public function getEndpoint(): ?string
-    {
-        return $this->endpoint;
-    }
-
-    public function setEndpoint(string $endpoint): self
-    {
-        $this->endpoint = $endpoint;
 
         return $this;
     }
@@ -121,5 +117,11 @@ class Path
         }
 
         return $this;
+    }
+
+    public function toArray() {
+        return [
+            'endpoint' => $this->endpoint
+        ];
     }
 }
