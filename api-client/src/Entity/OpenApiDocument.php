@@ -123,4 +123,14 @@ class OpenApiDocument
 
         return $this;
     }
+
+    public function toArray() : array
+    {
+        return [
+            'title'             => $this->title,
+            'description'       => $this->description,
+            'version'           => $this->version,
+            'userId'            => $this->userId,
+        ];
+    }
 }
