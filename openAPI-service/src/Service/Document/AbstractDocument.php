@@ -22,7 +22,7 @@ abstract class AbstractDocument
     private SerializerInterface $serializer;
 
     #[Ignore]
-    private string $userId;
+    private string $id;
 
     public function __construct()
     {
@@ -82,14 +82,14 @@ abstract class AbstractDocument
     }
 
     #[Ignore]
-    public function getUserId(): string
+    public function getId(): string
     {
-        return $this->userId;
+        return $this->id;
     }
 
-    public function setUserId(string $userId): self
+    public function setId(string $id): self
     {
-        $this->userId = $userId;
+        $this->id = $id;
         return $this;
     }
 }

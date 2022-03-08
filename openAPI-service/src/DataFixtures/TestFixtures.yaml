@@ -5,7 +5,6 @@ App\Entity\OpenApiDocument:
     version: '1.0.0'
     paths: ['@pet_item']
     tags: ['@pet_tag']
-    userId: 'b842cac0-cbe1-401e-b4bc-97b39c97cc1d'
 
 App\Entity\Path:
   pet_item:

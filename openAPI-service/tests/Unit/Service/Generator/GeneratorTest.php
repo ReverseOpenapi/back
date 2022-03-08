@@ -21,7 +21,7 @@ class GeneratorTest extends TestCase
     public function setUp(): void
     {
         $openApiDocument = new OpenApiDocument();
-        $openApiDocument->setUserId('b842cac0-cbe1-401e-b4bc-97b39c97cc1d');
+        $openApiDocument->setId('b842cac0-cbe1-401e-b4bc-97b39c97cc1d');
         $openApiDocument->setTitle('Pet Store');
 
         $openApiDocumentRepository = $this->createMock(OpenApiDocumentRepository::class);
@@ -33,7 +33,7 @@ class GeneratorTest extends TestCase
 
     public function testGenerationFromDatabase(): void
     {
-        $openApi = $this->generator->generate(1);
+        $openApi = $this->generator->generate('b842cac0-cbe1-401e-b4bc-97b39c97cc1d');
         $this->assertInstanceOf(AbstractDocument::class, $openApi);
     }
 

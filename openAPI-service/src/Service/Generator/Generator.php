@@ -71,7 +71,7 @@ class Generator implements GeneratorInterface
         }
 
         $document = $this->builder->buildDocument($openApiObjectBuilder);
-        $document->setUserId($openApiDocumentEntity->getUserId());
+        $document->setId($openApiDocumentEntity->getId());
         return $document;
     }
 
