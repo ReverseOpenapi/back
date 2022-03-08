@@ -85,7 +85,18 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "name": "id",
+            "in": "path",
+            "description": "ID of pet to return",
+            "required": true
+          }
+        ]
       }
     }
   }

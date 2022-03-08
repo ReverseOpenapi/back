@@ -9,7 +9,7 @@ App\Entity\OpenApiDocument:
 App\Entity\Path:
   pet_item:
     endpoint: '/pet/{id}'
-    items: ['@pet_get', '@pet_put']
+    pathItems: ['@pet_get', '@pet_put']
     parameters: ['@pet_get_id']
 
 App\Entity\PathItem:
@@ -25,6 +25,7 @@ App\Entity\PathItem:
     summary: 'Find pet by id'
     description: 'Find a pet in the Pet Store'
     responses: ['@pet_get_200']
+    parameters: ['@pet_get_id']
 
 App\Entity\HttpResponse:
   pet_post_405:

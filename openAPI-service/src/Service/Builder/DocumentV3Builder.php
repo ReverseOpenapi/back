@@ -3,17 +3,8 @@
 namespace App\Service\Builder;
 
 use App\Service\Document\AbstractDocument;
-use App\Service\Document\V3\Info;
-use App\Service\Document\V3\Parameter;
-use App\Service\Document\V3\Path;
-use App\Service\Document\V3\PathItem;
-use App\Service\Document\V3\RequestBody;
-use App\Service\Document\V3\Response;
-use App\Service\Document\V3\Tag;
-use App\Service\Builder\BuilderObject\OpenApiBuilderObject;
-use App\Service\Builder\BuilderObject\PathBuilderObject;
-use App\Service\Document\V3\OpenApi;
-use App\Service\Builder\BuilderObject\PathItemBuilderObject;
+use App\Service\Document\V3\{Info, Parameter, Path, PathItem, RequestBody, Response, Tag, OpenApi};
+use App\Service\Builder\BuilderObject\{OpenApiBuilderObject, PathBuilderObject, PathItemBuilderObject};
 use App\Service\Hydrator\HydratorInterface;
 
 class DocumentV3Builder implements BuilderInterface
@@ -80,6 +71,11 @@ class DocumentV3Builder implements BuilderInterface
         foreach ($pathItemBuilderObject->getResponses() as $responseBuilderObject) {
             $response = $this->hydrator->hydrateFromObject($responseBuilderObject, new Response());
             $pathItem->addResponse($response);
+        }
+
+        foreach ($pathItemBuilderObject->getParameters() as $parameterBuilderObject) {
+            $parameter = $this->hydrator->hydrateFromObject($parameterBuilderObject, new Parameter());
+            $pathItem->addParameter($parameter);
         }
 
         return $pathItem;

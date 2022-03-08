@@ -8,11 +8,10 @@ App\Entity\OpenApiDocument:
 App\Entity\Path:
   pet:
     endpoint: '/pet'
-    items: ['@pet_post']
+    pathItems: ['@pet_post']
   pet_item:
     endpoint: '/pet/{id}'
-    items: ['@pet_get', '@pet_delete']
-    parameters: ['@pet_get_id']
+    pathItems: ['@pet_get', '@pet_delete']
 
 App\Entity\PathItem:
   pet_post:
@@ -21,16 +20,19 @@ App\Entity\PathItem:
     summary: 'Add a new pet to the store'
     responses: ['@pet_post_405']
     requestBody: '@pet_post_body'
+    parameters: ['@pet_get_id']
   pet_get:
     httpMethod: 'GET'
     tags: ['@pet_tag']
     summary: 'Find pet by id'
     responses: ['@pet_get_200', '@pet_get_400', '@pet_get_404']
+    parameters: ['@pet_get_id']
   pet_delete:
     httpMethod: 'DELETE'
     tags: ['@pet_tag']
     summary: 'Deletes a pet'
     responses: ['@pet_delete_400', '@pet_delete_404']
+    parameters: ['@pet_delete_id']
 
 App\Entity\HttpResponse:
   pet_post_405:

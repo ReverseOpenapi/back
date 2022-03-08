@@ -19,8 +19,17 @@ class PathItem
     #[SerializedName('description')]
     private ?string $description = null;
 
+    /**
+     * @var iterable<Response>
+     */
     #[SerializedName('responses')]
     private iterable $responses = [];
+
+    /**
+     * @var iterable<Parameter>
+     */
+    #[SerializedName('parameters')]
+    private ?iterable $parameters = null;
 
     private ?RequestBody $requestBody = null;
 
@@ -91,6 +100,21 @@ class PathItem
         }
 
         array_push($this->tags, $tag);
+        return $this;
+    }
+
+    public function getParameters(): ?iterable
+    {
+        return $this->parameters;
+    }
+
+    public function addParameter(Parameter $parameter): self
+    {
+        if ($this->parameters === null) {
+            $this->parameters = [];
+        }
+
+        array_push($this->parameters, $parameter);
         return $this;
     }
 }

@@ -114,6 +114,13 @@ class Generator implements GeneratorInterface
             $pathItemBuilder->addTag($tag->getName());
         }
 
+        foreach ($pathItem->getParameters() as $parameter) {
+            $parameterBuildObject = $this->hydrator->hydrateFromObject($parameter, new ParameterBuilderObject());
+            $parameterBuildObject->setLocation($parameter->getLocation())
+                ->setSchema($parameter->getParameterSchema());
+            $pathItemBuilder->addParameter($parameterBuildObject);
+        }
+
         return $pathItemBuilder;
     }
 }

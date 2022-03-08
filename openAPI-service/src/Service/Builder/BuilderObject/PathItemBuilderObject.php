@@ -16,6 +16,11 @@ class PathItemBuilderObject
 
     private ?RequestBodyBuilderObject $requestBody = null;
 
+    /**
+     * @var iterable<ParameterBuilderObject>
+     */
+    private iterable $parameters = [];
+
     public function getHttpMethod(): string
     {
         return $this->httpMethod;
@@ -83,6 +88,17 @@ class PathItemBuilderObject
         }
 
         array_push($this->tags, $tag);
+        return $this;
+    }
+
+    public function getParameters(): iterable
+    {
+        return $this->parameters;
+    }
+
+    public function addParameter(ParameterBuilderObject $parameter): self
+    {
+        array_push($this->parameters, $parameter);
         return $this;
     }
 }

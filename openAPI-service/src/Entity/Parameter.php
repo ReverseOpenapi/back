@@ -31,6 +31,10 @@ class Parameter
     #[ORM\Column(type: 'json')]
     private array $parameterSchema = [];
 
+    #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'parameters')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $pathItem;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +108,18 @@ class Parameter
     public function setParameterSchema(array $parameterSchema): self
     {
         $this->parameterSchema = $parameterSchema;
+
+        return $this;
+    }
+
+    public function getPathItem(): ?PathItem
+    {
+        return $this->pathItem;
+    }
+
+    public function setPathItem(?PathItem $pathItem): self
+    {
+        $this->pathItem = $pathItem;
 
         return $this;
     }
