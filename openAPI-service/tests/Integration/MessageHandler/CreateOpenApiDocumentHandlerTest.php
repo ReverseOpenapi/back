@@ -2,7 +2,9 @@
 
 namespace App\Tests\Integration\MessageHandler;
 
+use App\Entity\OpenApiDocument;
 use App\Messenger\Message\CreateOpenApiDocument;
+use Doctrine\ORM\EntityManagerInterface;
 use Gaufrette\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -12,6 +14,8 @@ class CreateOpenApiDocumentHandlerTest extends WebTestCase
 {
     private MessageBusInterface $bus;
 
+    private EntityManagerInterface $entityManager;
+
     /**
      * directory that holds test generated openapi document
      */
@@ -20,6 +24,7 @@ class CreateOpenApiDocumentHandlerTest extends WebTestCase
     public function setUp(): void
     {
         self::bootKernel();
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $this->bus = static::getContainer()->get(MessageBusInterface::class);
         $this->directory = static::getContainer()->get(KernelInterface::class)->getProjectDir() . '/var/tests';
         if (!file_exists($this->directory)) {
@@ -29,7 +34,8 @@ class CreateOpenApiDocumentHandlerTest extends WebTestCase
 
     public function testHandlerIsSuccessful(): void
     {
-        $this->bus->dispatch(new CreateOpenApiDocument(1));
+        $openApiDocument = $this->entityManager->getRepository(OpenApiDocument::class)->findOneBy([]);
+        $this->bus->dispatch(new CreateOpenApiDocument($openApiDocument->getId()));
 
         $this->assertJsonFileEqualsJsonFile(
             $this->directory . '/../../tests/Fixtures/openapi.json',

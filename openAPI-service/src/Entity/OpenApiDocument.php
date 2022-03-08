@@ -6,14 +6,16 @@ use App\Repository\OpenApiDocumentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Doctrine\UuidGenerator;
 
 #[ORM\Entity(repositoryClass: OpenApiDocumentRepository::class)]
 class OpenApiDocument
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class:UuidGenerator::class)]
+    private ?string $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
@@ -39,7 +41,7 @@ class OpenApiDocument
         $this->tags = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

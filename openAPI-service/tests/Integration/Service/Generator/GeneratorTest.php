@@ -19,7 +19,7 @@ class GeneratorTest extends KernelTestCase
     public function testException(): void
     {
         $this->expectExceptionMessage('Document not found');
-        $this->generator->generate(0);
+        $this->generator->generate('96a02a37-acd5-44fc-abcb-a8c1a9cacb21');
     }
 
     public function tearDown(): void

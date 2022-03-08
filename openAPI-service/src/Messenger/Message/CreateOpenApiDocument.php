@@ -4,14 +4,14 @@ namespace App\Messenger\Message;
 
 class CreateOpenApiDocument
 {
-    private int $documentId;
+    private string $documentId;
 
-    public function __construct(int $documentId)
+    public function __construct(string $documentId)
     {
         $this->documentId = $documentId;
     }
 
-    public function getDocumentId(): int
+    public function getDocumentId(): string
     {
         return $this->documentId;
     }
