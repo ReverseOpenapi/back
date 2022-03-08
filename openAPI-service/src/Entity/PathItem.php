@@ -28,9 +28,8 @@ class PathItem
     #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true)]
     private Collection $responses;
 
-    #[ORM\ManyToOne(targetEntity: HttpMethod::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?HttpMethod $httpMethod;
+    #[ORM\Column(type: 'string', length: 7)]
+    private ?string $httpMethod;
 
     // TODO: why is requestBody not initialized when lazy loaded and getter is called by hydrator ?
     #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
@@ -116,12 +115,12 @@ class PathItem
         return $this;
     }
 
-    public function getHttpMethod(): ?HttpMethod
+    public function getHttpMethod(): string
     {
         return $this->httpMethod;
     }
 
-    public function setHttpMethod(?HttpMethod $httpMethod): self
+    public function setHttpMethod(string $httpMethod): self
     {
         $this->httpMethod = $httpMethod;
 

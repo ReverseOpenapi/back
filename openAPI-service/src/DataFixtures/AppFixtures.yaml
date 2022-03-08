@@ -16,29 +16,21 @@ App\Entity\Path:
 
 App\Entity\PathItem:
   pet_post:
-    httpMethod: '@post'
+    httpMethod: 'POST'
     tags: ['@pet_tag']
     summary: 'Add a new pet to the store'
     responses: ['@pet_post_405']
     requestBody: '@pet_post_body'
   pet_get:
-    httpMethod: '@get'
+    httpMethod: 'GET'
     tags: ['@pet_tag']
     summary: 'Find pet by id'
     responses: ['@pet_get_200', '@pet_get_400', '@pet_get_404']
   pet_delete:
-    httpMethod: '@delete'
+    httpMethod: 'DELETE'
     tags: ['@pet_tag']
     summary: 'Deletes a pet'
     responses: ['@pet_delete_400', '@pet_delete_404']
-
-App\Entity\HttpMethod:
-  post:
-    method: 'POST'
-  get:
-    method: 'GET'
-  delete:
-    method: 'DELETE'
 
 App\Entity\HttpResponse:
   pet_post_405:

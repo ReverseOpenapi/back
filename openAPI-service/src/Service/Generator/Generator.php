@@ -98,7 +98,7 @@ class Generator implements GeneratorInterface
     private function getPathItemBuilderObject(PathItem $pathItem): PathItemBuilderObject
     {
         $pathItemBuilder = $this->hydrator->hydrateFromObject($pathItem, new PathItemBuilderObject());
-        $pathItemBuilder->setHttpMethod(strtolower($pathItem->getHttpMethod()->getMethod()));
+        $pathItemBuilder->setHttpMethod(strtolower($pathItem->getHttpMethod()));
 
         if ($pathItem->getRequestBody()) {
             $requestBodyBuilderObject = $this->hydrator->hydrateFromObject($pathItem->getRequestBody(), new RequestBodyBuilderObject());

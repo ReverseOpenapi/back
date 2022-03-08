@@ -14,23 +14,17 @@ App\Entity\Path:
 
 App\Entity\PathItem:
   pet_put:
-    httpMethod: '@put'
+    httpMethod: 'PUT'
     tags: ['@pet_tag']
     summary: 'Update a pet'
     responses: ['@pet_post_405']
     requestBody: '@pet_put_body'
   pet_get:
-    httpMethod: '@get'
+    httpMethod: 'GET'
     tags: ['@pet_tag']
     summary: 'Find pet by id'
     description: 'Find a pet in the Pet Store'
     responses: ['@pet_get_200']
-
-App\Entity\HttpMethod:
-  put:
-    method: 'PUT'
-  get:
-    method: 'GET'
 
 App\Entity\HttpResponse:
   pet_post_405:
