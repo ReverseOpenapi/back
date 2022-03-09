@@ -33,7 +33,7 @@ func main() {
 
 	fmt.Println(o.Method)
 	fmt.Println("OUIII")
-	a := model.PathDao
+	a := services.PathService
 	r, err := a.Get(1)
 	if err != nil {
 		panic(err)
@@ -59,9 +59,17 @@ func main() {
 	}
 	err = t.SeedPost("")
 	if err != nil {
+		fmt.Println("fsddsdfs")
+
 		panic(err)
 	}
-	err = t.GetTemplate()
+	/* err = t.GetTemplate()
+	if err != nil {
+		panic(err)
+	}*/
+
+	getTemplate := integrationTemplate.NewGetTemplate("localhost", requestBody.Content, "", r.Endpoint, 200)
+	err = getTemplate.Get()
 	if err != nil {
 		panic(err)
 	}

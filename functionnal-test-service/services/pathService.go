@@ -1,17 +1,18 @@
-package model
+package services
 
 import (
 	"fmt"
 	"github.com/back/functionnal-test-service/connector"
+	"github.com/back/functionnal-test-service/model"
 )
 
 type pathInterface interface {
-	Get(id int) (*Path, error)
+	Get(id int) (*model.Path, error)
 }
 
 type pathDao struct {}
 
-var   PathDao pathInterface = &pathDao{}
+var   PathService pathInterface = &pathDao{}
 
 const (
 	getPath = "SELECT * FROM `path` WHERE id = ?;"
@@ -19,13 +20,13 @@ const (
 )
 
 
-func (p pathDao) Get(id int) (*Path, error) {
+func (p pathDao) Get(id int) (*model.Path, error) {
 	stmt, err := connector.Db.Prepare(getPath)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	var path Path
+	var path model.Path
 	result := stmt.QueryRow(id)
 	if err = result.Scan(&path.Id, &path.OpenApiDocumentId, &path.Endpoint); err != nil {
 		fmt.Println("this is the error man: ", err)
