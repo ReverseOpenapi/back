@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ParameterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParameterRepository::class)]
 class Parameter
@@ -13,65 +14,57 @@ class Parameter
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'bool')]
     #[ORM\Column(type: 'boolean')]
     private ?bool $required;
 
-    #[ORM\ManyToOne(targetEntity: ParameterLocation::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?ParameterLocation $location;
+    #[Assert\NotBlank]
+    #[Assert\Choice(['query', 'header', 'path', 'cookie'])]
+    #[ORM\Column(type: 'string', length: 6)]
+    private ?string $location;
 
     #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'parameters')]
     private ?Path $path;
-
+    
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name;
 
+
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'array')]
+    #[Assert\Collection(
+        fields: [
+            'type' => [
+                new Assert\NotBlank,
+                new Assert\Type(type: 'string'),
+                new Assert\Choice(['integer', 'boolean', 'array', 'object'])
+            ]
+        ],
+        allowMissingFields: false
+    )]
     #[ORM\Column(type: 'json')]
-    private array $parameterSchema = [];
+    private array $parameterSchema;
 
-    public function getId(): ?int
-    {
-        return $this->id;
+
+    public function __construct(array $data = []){
+
+        if (count($data)) {
+            $this->description          = $data['description'] ?? null;
+            $this->required             = $data['required'] ?? null;
+            $this->location             = $data['location'] ?? null;
+            $this->name                 = $data['name'] ?? null;
+            $this->parameterSchema      = $data['parameterSchema'] ?? [];
+
+        }
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getRequired(): ?bool
-    {
-        return $this->required;
-    }
-
-    public function setRequired(bool $required): self
-    {
-        $this->required = $required;
-
-        return $this;
-    }
-
-    public function getLocation(): ?ParameterLocation
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?ParameterLocation $location): self
-    {
-        $this->location = $location;
-
-        return $this;
-    }
 
     public function getPath(): ?Path
     {
@@ -85,27 +78,13 @@ class Parameter
         return $this;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getParameterSchema(): ?array
-    {
-        return $this->parameterSchema;
-    }
-
-    public function setParameterSchema(array $parameterSchema): self
-    {
-        $this->parameterSchema = $parameterSchema;
-
-        return $this;
+    public function toArray() {
+        return [
+            'description'       => $this->description,
+            'required'          => $this->required,
+            'location'          => $this->location,
+            'name'              => $this->name,
+            'parameterSchema'   => $this->parameterSchema,
+        ];
     }
 }

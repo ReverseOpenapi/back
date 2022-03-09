@@ -98,11 +98,6 @@ class Parameter {
     {field} name: String
     {field} description: ?String
     {field} required: Boolean
-}
-
-' https://swagger.io/specification/#parameter-object -> refers to "in" field name
-class ParameterLocation {
-    {field} id: Int
     {field} location: String
 }
 
@@ -119,7 +114,6 @@ Path "0..n" -- "1,1" Parameter /' Path has zero or many Parameter, Parameter has
 PathItem "0..n" -- "1,1" Parameter /' PathItem has zero or many Parameter, Parameter has one PathItem '/
 PathItem "1..n" -- "1,1" HttpResponse /' PathItem has one or many HttpResponse, HttpResponse has one Pathitem '/
 Path "1..n" -- "1,1" PathItem /' Path has zero or many PathItem, PathItem has one Path '/
-ParameterLocation "0..n" -- "1,1" Parameter /' ParameterLocation has zero or many Parameter, Parameter has one ParameterLocation '/
 RequestBody "1,1" -- "0,1" PathItem /' RequestBody has one PathItem, PathItem has zero or one PathItem '/
 Tag "1,1" -- "0..n" OpenApiDocument /' Tag has one OpenApiDocument, OpenApiDocument has zero or many Tag '/
 Tag "1..n" -- "0..n" PathItem /' Tag has one or many PathItem, PathItem has zero or many PathItem '/

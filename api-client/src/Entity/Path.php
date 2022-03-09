@@ -28,7 +28,7 @@ class Path
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $pathItems;
 
-    #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class)]
+    #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class, cascade: ["persist"])]
     private Collection $parameters;
 
     public function __construct(array $data = [])
@@ -126,6 +126,9 @@ class Path
             'pathItems'         => array_map(function ($pathItem) {
                 return $pathItem->toArray();
             }, $this->pathItems->toArray()),
+            'parameters'    => array_map(function ($parameter) {
+                return $parameter->toArray();
+            }, $this->parameters->toArray()),
         ];
     }
 }
