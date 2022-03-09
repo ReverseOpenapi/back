@@ -28,7 +28,7 @@ class PathItem
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $responses;
 
     #[Assert\NotBlank]
@@ -66,53 +66,11 @@ class PathItem
         $this->tags = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getPath(): ?Path
-    {
-        return $this->path;
-    }
-
     public function setPath(?Path $path): self
     {
         $this->path = $path;
 
         return $this;
-    }
-
-    public function getSummary(): ?string
-    {
-        return $this->summary;
-    }
-
-    public function setSummary(?string $summary): self
-    {
-        $this->summary = $summary;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|HttpResponse[]
-     */
-    public function getResponses(): Collection
-    {
-        return $this->responses;
     }
 
     public function addResponse(HttpResponse $response): self
@@ -125,36 +83,11 @@ class PathItem
         return $this;
     }
 
-    public function removeResponse(HttpResponse $response): self
-    {
-        if ($this->responses->removeElement($response)) {
-            // set the owning side to null (unless already changed)
-            if ($response->getPathItem() === $this) {
-                $response->setPathItem(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getRequestBody(): ?RequestBody
-    {
-        return $this->requestBody;
-    }
-
     public function setRequestBody(?RequestBody $requestBody): self
     {
         $this->requestBody = $requestBody;
 
         return $this;
-    }
-
-    /**
-     * @return Collection|Tag[]
-     */
-    public function getTags(): Collection
-    {
-        return $this->tags;
     }
 
     public function addTag(Tag $tag): self
@@ -166,18 +99,14 @@ class PathItem
         return $this;
     }
 
-    public function removeTag(Tag $tag): self
-    {
-        $this->tags->removeElement($tag);
-
-        return $this;
-    }
-
     public function toArray() {
         return [
             'summary'       => $this->summary,
             'description'   => $this->description,
             'httpMethod'    => $this->httpMethod,
+            'responses'     => array_map(function ($response) {
+                return $response->toArray();
+            }, $this->responses->toArray()),
         ];
     }
 }

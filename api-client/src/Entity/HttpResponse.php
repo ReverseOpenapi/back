@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\HttpResponseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: HttpResponseRepository::class)]
 class HttpResponse
@@ -13,74 +15,40 @@ class HttpResponse
     #[ORM\Column(type: 'integer')]
     private ?int $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'integer')]
     #[ORM\Column(type: 'integer')]
     private ?int $httpStatusCode;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
-    /**
-     * @var array<mixed>
-     */
+
+    #[Assert\Type(type: 'array')]
     #[ORM\Column(type: 'json', nullable: true)]
-    private array $content = [];
+    private array $content;
 
     #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'responses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?PathItem $pathItem;
 
-    public function getId(): ?int
-    {
-        return $this->id;
+
+    public function __construct(array $data = []){
+        if (count($data)) {
+            $this->httpStatusCode   = $data['httpStatusCode'] ?? null;
+            $this->description      = $data['description'] ?? null;
+            $this->content          = $data['content'] ?? [];
+        }
     }
 
-    public function getHttpStatusCode(): ?int
-    {
-        return $this->httpStatusCode;
+    public function toArray(){
+        return [
+            'httpStatusCode'    => $this->httpStatusCode,
+            'description'       => $this->description,
+            'content'           => $this->content,
+        ];
     }
-
-    public function setHttpStatusCode(int $httpStatusCode): self
-    {
-        $this->httpStatusCode = $httpStatusCode;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return array<mixed>|null
-     */
-    public function getContent(): ?array
-    {
-        return $this->content;
-    }
-
-    /**
-     * @param array<mixed>|null $content
-     */
-    public function setContent(?array $content): self
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getPathItem(): ?PathItem
-    {
-        return $this->pathItem;
-    }
-
     public function setPathItem(?PathItem $pathItem): self
     {
         $this->pathItem = $pathItem;
