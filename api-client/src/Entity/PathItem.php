@@ -52,6 +52,8 @@ class PathItem
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'pathItems')]
     private Collection $tags;
 
+    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: Parameter::class, cascade: ["persist"])]
+    private Collection $parameters;
 
     public function __construct(array $data = [])
     {
@@ -64,6 +66,7 @@ class PathItem
 
         $this->responses = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->parameters = new ArrayCollection();
     }
 
     public function setPath(?Path $path): self
@@ -115,6 +118,16 @@ class PathItem
         return $this;
     }
 
+    public function addParameter(Parameter $parameter): self
+    {
+        if (!$this->parameters->contains($parameter)) {
+            $this->parameters[] = $parameter;
+            $parameter->setPathItem($this);
+        }
+
+        return $this;
+    }
+
     public function toArray() {
         return [
             'summary'       => $this->summary,
@@ -127,6 +140,9 @@ class PathItem
             'tags'          => array_map(function ($tag) {
                 return $tag->getName();
             }, $this->tags->toArray()),
+            'parameters'    => array_map(function ($parameter) {
+                return $parameter->toArray();
+            }, $this->parameters->toArray()),
         ];
     }
 }

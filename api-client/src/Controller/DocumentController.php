@@ -98,7 +98,7 @@ class DocumentController extends AbstractController
                                 continue;
                             }
     
-                            $pathEntity->addParameter($parameterItenty);
+                            $pathItemEntity->addParameter($parameterItenty);
                         }
 
                         foreach ($pathItem['responses'] as $key => $response) {

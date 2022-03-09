@@ -28,9 +28,6 @@ class Path
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $pathItems;
 
-    #[ORM\OneToMany(mappedBy: 'path', targetEntity: Parameter::class, cascade: ["persist"])]
-    private Collection $parameters;
-
     public function __construct(array $data = [])
     {
 
@@ -39,7 +36,6 @@ class Path
         }
 
         $this->pathItems = new ArrayCollection();
-        $this->parameters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,16 +73,6 @@ class Path
         return $this;
     }
 
-    public function addParameter(Parameter $parameter): self
-    {
-        if (!$this->parameters->contains($parameter)) {
-            $this->parameters[] = $parameter;
-            $parameter->setPath($this);
-        }
-
-        return $this;
-    }
-
     public function toArray() {
 
         return [
@@ -94,9 +80,6 @@ class Path
             'pathItems'         => array_map(function ($pathItem) {
                 return $pathItem->toArray();
             }, $this->pathItems->toArray()),
-            'parameters'    => array_map(function ($parameter) {
-                return $parameter->toArray();
-            }, $this->parameters->toArray()),
         ];
     }
 }

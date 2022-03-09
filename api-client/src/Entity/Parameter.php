@@ -28,8 +28,8 @@ class Parameter
     #[ORM\Column(type: 'string', length: 6)]
     private ?string $location;
 
-    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'parameters')]
-    private ?Path $path;
+    #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'parameters')]
+    private ?PathItem $pathItem;
     
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
@@ -65,15 +65,9 @@ class Parameter
         }
     }
 
-
-    public function getPath(): ?Path
+    public function setPathItem(?PathItem $pathItem): self
     {
-        return $this->path;
-    }
-
-    public function setPath(?Path $path): self
-    {
-        $this->path = $path;
+        $this->pathItem = $pathItem;
 
         return $this;
     }
