@@ -13,7 +13,7 @@ class HttpResponse
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private int $id;
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
@@ -23,7 +23,6 @@ class HttpResponse
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
-
 
     #[Assert\Type(type: 'array')]
     #[ORM\Column(type: 'json', nullable: true)]
@@ -49,6 +48,7 @@ class HttpResponse
             'content'           => $this->content,
         ];
     }
+
     public function setPathItem(?PathItem $pathItem): self
     {
         $this->pathItem = $pathItem;

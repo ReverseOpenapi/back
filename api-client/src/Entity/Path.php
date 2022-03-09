@@ -14,11 +14,7 @@ class Path
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
-
-    #[ORM\ManyToOne(targetEntity: OpenApiDocument::class, inversedBy: 'paths')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?OpenApiDocument $openApiDocument;
+    private int $id;
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
@@ -27,6 +23,10 @@ class Path
 
     #[ORM\OneToMany(mappedBy: 'path', targetEntity: PathItem::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $pathItems;
+
+    #[ORM\ManyToOne(targetEntity: OpenApiDocument::class, inversedBy: 'paths')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?OpenApiDocument $openApiDocument;
 
     public function __construct(array $data = [])
     {

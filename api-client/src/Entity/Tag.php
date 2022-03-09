@@ -14,7 +14,7 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
+    private int $id;
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]

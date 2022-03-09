@@ -31,13 +31,14 @@ class OpenApiDocument
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $paths;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade: ["persist"])]
-    private Collection $tags;
-
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
+
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade: ["persist"])]
+    private Collection $tags;
+
 
     public function __construct(array $data = [])
     {
@@ -76,18 +77,6 @@ class OpenApiDocument
         return $this;
     }
 
-    public function removePath(Path $path): self
-    {
-        if ($this->paths->removeElement($path)) {
-            // set the owning side to null (unless already changed)
-            if ($path->getOpenApiDocument() === $this) {
-                $path->setOpenApiDocument(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Tag[]
      */
@@ -101,18 +90,6 @@ class OpenApiDocument
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
             $tag->setOpenApiDocument($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTag(Tag $tag): self
-    {
-        if ($this->tags->removeElement($tag)) {
-            // set the owning side to null (unless already changed)
-            if ($tag->getOpenApiDocument() === $this) {
-                $tag->setOpenApiDocument(null);
-            }
         }
 
         return $this;

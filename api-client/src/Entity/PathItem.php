@@ -14,11 +14,7 @@ class PathItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id;
-
-    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'pathItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Path $path;
+    private int $id;
 
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
@@ -27,9 +23,6 @@ class PathItem
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
-
-    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true, cascade: ["persist"])]
-    private Collection $responses;
 
     #[Assert\NotBlank]
     #[Assert\Choice([
@@ -46,6 +39,9 @@ class PathItem
     #[ORM\Column(type: 'string', length: 7)]
     private $httpMethod;
 
+    #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: HttpResponse::class, orphanRemoval: true, cascade: ["persist"])]
+    private Collection $responses;
+
     #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?RequestBody $requestBody;
 
@@ -54,6 +50,10 @@ class PathItem
 
     #[ORM\OneToMany(mappedBy: 'pathItem', targetEntity: Parameter::class, cascade: ["persist"])]
     private Collection $parameters;
+
+    #[ORM\ManyToOne(targetEntity: Path::class, inversedBy: 'pathItems')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Path $path;
 
     public function __construct(array $data = [])
     {
