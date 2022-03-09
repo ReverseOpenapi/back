@@ -129,20 +129,48 @@ class PathItem
     }
 
     public function toArray() {
-        return [
+
+        $baseEntity = [
             'summary'       => $this->summary,
             'description'   => $this->description,
             'httpMethod'    => $this->httpMethod,
-            'requestBody'   => $this->requestBody->toArray(),
-            'responses'     => array_map(function ($response) {
-                return $response->toArray();
-            }, $this->responses->toArray()),
-            'tags'          => array_map(function ($tag) {
-                return $tag->getName();
-            }, $this->tags->toArray()),
-            'parameters'    => array_map(function ($parameter) {
-                return $parameter->toArray();
-            }, $this->parameters->toArray()),
         ];
+
+        if($this->requestBody) $baseEntity['requestBody'] =  $this->requestBody->toArray();
+
+        if (count($this->responses)) {
+
+            $baseEntity['responses'] = array_map(
+                function ($response) {
+
+                    return $response->toArray();
+                },
+                $this->responses->toArray()
+            );
+        }
+
+        if (count($this->tags)) {
+
+            $baseEntity['tags'] = array_map(
+                function ($tag) {
+
+                    return $tag->getName();
+                },
+                $this->tags->toArray()
+            );
+        }
+
+        if (count($this->parameters)) {
+
+            $baseEntity['parameters'] = array_map(
+                function ($parameter) {
+
+                    return $parameter->toArray();
+                },
+                $this->parameters->toArray()
+            );
+        }
+
+        return $baseEntity;
     }
 }

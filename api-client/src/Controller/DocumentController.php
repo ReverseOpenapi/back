@@ -87,32 +87,38 @@ class DocumentController extends AbstractController
 
                         $document->addPath($pathEntity);
 
-                        foreach ($pathItem['parameters'] as $key => $parameter) {
+                        if (isset($pathItem['parameters'])) {
 
-                            $parameterItenty = new Parameter($parameter);
-
-                            $parameterErrors = $validator->getErrors($parameterItenty);
-
-                            if (count($parameterErrors)) {
-                                $errors[] = ['index' => $key, 'type' => 'paths.pathItems.parameters', 'errors' => $parameterErrors];
-                                continue;
+                            foreach ($pathItem['parameters'] as $key => $parameter) {
+                                
+                                $parameterItenty = new Parameter($parameter);
+                                
+                                $parameterErrors = $validator->getErrors($parameterItenty);
+                                
+                                if (count($parameterErrors)) {
+                                    $errors[] = ['index' => $key, 'type' => 'paths.pathItems.parameters', 'errors' => $parameterErrors];
+                                    continue;
+                                }
+                                
+                                $pathItemEntity->addParameter($parameterItenty);
                             }
-    
-                            $pathItemEntity->addParameter($parameterItenty);
                         }
 
-                        foreach ($pathItem['responses'] as $key => $response) {
+                        if (isset($pathItem['responses'])) {
 
-                            $responseItenty = new HttpResponse($response);
-
-                            $responseErrors = $validator->getErrors($responseItenty);
-
-                            if (count($responseErrors)) {
-                                $errors[] = ['index' => $key, 'type' => 'paths.pathItems.response', 'errors' => $responseErrors];
-                                continue;
+                            foreach ($pathItem['responses'] as $key => $response) {
+                                
+                                $responseItenty = new HttpResponse($response);
+                                
+                                $responseErrors = $validator->getErrors($responseItenty);
+                                
+                                if (count($responseErrors)) {
+                                    $errors[] = ['index' => $key, 'type' => 'paths.pathItems.response', 'errors' => $responseErrors];
+                                    continue;
+                                }
+                                
+                                $pathItemEntity->addResponse($responseItenty);
                             }
-
-                            $pathItemEntity->addResponse($responseItenty);
                         }
 
 
