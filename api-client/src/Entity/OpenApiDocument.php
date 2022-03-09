@@ -28,13 +28,13 @@ class OpenApiDocument
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade: ["persist"])]
-    private Collection $paths;
-
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
+
+    #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Path::class, orphanRemoval: true, cascade: ["persist"])]
+    private Collection $paths;
 
     #[ORM\OneToMany(mappedBy: 'openApiDocument', targetEntity: Tag::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $tags;
