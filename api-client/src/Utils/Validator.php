@@ -17,7 +17,7 @@ class Validator
 
         if (count($errors) > 0) {
             foreach ($errors as $violation) {
-                $messages[$violation->getPropertyPath()][] = $violation->getPropertyPath() . ' ' . $violation->getMessage();
+                $messages[$violation->getPropertyPath()][] = $violation->getMessage();
             }
         }
 
