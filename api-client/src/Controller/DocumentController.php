@@ -84,6 +84,7 @@ class DocumentController extends AbstractController
                             continue;
                         }
 
+                        $document->addPath($pathEntity);
 
                         foreach ($pathItem['parameters'] as $key => $parameter) {
 
@@ -115,11 +116,13 @@ class DocumentController extends AbstractController
 
                         $pathEntity->addPathItem($pathItemEntity);
 
+
+                        if(isset($pathItem['tags'])) $pathItemEntity->addTags($pathItem['tags']);
+
+
                     }
                 }
 
-
-                $document->addPath($pathEntity);
             }
         }
 

@@ -42,12 +42,9 @@ class Tag
         $this->pathItems = new ArrayCollection();
     }
 
-    /**
-     * @return Collection|PathItem[]
-     */
-    public function getPathItems(): Collection
-    {
-        return $this->pathItems;
+    public function getName() {
+
+        return $this->name;
     }
 
     public function addPathItem(PathItem $pathItem): self
@@ -58,20 +55,6 @@ class Tag
         }
 
         return $this;
-    }
-
-    public function removePathItem(PathItem $pathItem): self
-    {
-        if ($this->pathItems->removeElement($pathItem)) {
-            $pathItem->removeTag($this);
-        }
-
-        return $this;
-    }
-
-    public function getOpenApiDocument(): ?OpenApiDocument
-    {
-        return $this->openApiDocument;
     }
 
     public function setOpenApiDocument(?OpenApiDocument $openApiDocument): self

@@ -99,6 +99,22 @@ class PathItem
         return $this;
     }
 
+    public function addTags(array $tagsName) : self
+    {
+        $tags = $this->path->getOpenApiDocument()->getTags();
+        
+        $tags = array_filter($tags->toArray(), function($tag) use ($tagsName) {
+
+            return in_array($tag->getName(), $tagsName);
+        });
+
+        foreach ($tags as $tag) {
+            $this->addTag($tag);
+        }
+
+        return $this;
+    }
+
     public function toArray() {
         return [
             'summary'       => $this->summary,
@@ -107,6 +123,9 @@ class PathItem
             'responses'     => array_map(function ($response) {
                 return $response->toArray();
             }, $this->responses->toArray()),
+            'tags'     => array_map(function ($tag) {
+                return $tag->getName();
+            }, $this->tags->toArray()),
         ];
     }
 }
