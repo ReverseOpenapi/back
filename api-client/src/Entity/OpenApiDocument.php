@@ -39,11 +39,6 @@ class OpenApiDocument
     #[ORM\Column(type: 'string', length: 255)]
     private $version;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'string')]
-    #[ORM\Column(type: 'string', length: 255)]
-    private $userId;
-
     public function __construct(array $data = [])
     {
 
@@ -51,7 +46,6 @@ class OpenApiDocument
             $this->title        = $data['title'] ?? null;
             $this->description  = $data['description'] ?? '';
             $this->version      = $data['version'] ?? null;
-            $this->userId       = $data['userId'] ?? null;
         }
 
         $this->paths = new ArrayCollection();
@@ -130,7 +124,6 @@ class OpenApiDocument
             'title'             => $this->title,
             'description'       => $this->description,
             'version'           => $this->version,
-            'userId'            => $this->userId,
             'tags'              => array_map(function ($tag) {
                 return $tag->toArray();
             }, $this->tags->toArray()),
