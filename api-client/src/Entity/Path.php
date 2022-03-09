@@ -88,7 +88,7 @@ class Path
     }
 
     public function toArray() {
-        // dd($this->pathItems->toArray());
+
         return [
             'endpoint'          => $this->endpoint,
             'pathItems'         => array_map(function ($pathItem) {
