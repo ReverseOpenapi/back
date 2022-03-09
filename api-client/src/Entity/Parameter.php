@@ -28,12 +28,11 @@ class Parameter
     #[ORM\Column(type: 'string', length: 6)]
     private ?string $location;
 
-    
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name;
-    
+
     #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'parameters')]
     private ?PathItem $pathItem;
 
