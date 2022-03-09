@@ -29,7 +29,6 @@ func NewMysqlDb(user string, password string, DbName string) *MySqlDb {
 func (mdb *MySqlDb) InitDb() error {
 	var err error
 	url := fmt.Sprintf("%v:%v@(%v:%v)/%v", mdb.User, mdb.Password, os.Getenv("DB_HOST"), "3306" ,mdb.DbName)
-	fmt.Println(url)
 	Db, err = sql.Open(mdb.Type, url)
 	return err
 }

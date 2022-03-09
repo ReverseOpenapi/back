@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"github.com/back/functionnal-test-service/connector"
+	"github.com/back/functionnal-test-service/integrationTemplate"
 	"github.com/back/functionnal-test-service/model"
 	"github.com/back/functionnal-test-service/services"
+	"github.com/back/functionnal-test-service/utils/files"
 )
 
 func checkEnv() []string {
@@ -42,5 +44,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(l[0].Summary)
+	fmt.Println(l[0].RequestMethodId)
+	requestBody, err := services.RequestBodyService.Get(l[0].RequestMethodId)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(requestBody.Content)
+	pwdPath := "./.export/1/integration_pet_test.go"
+	t := integrationTemplate.NewTemplate("localhost")
+	err = files.CreateFile(pwdPath)
+	err = t.Header()
+	if err != nil {
+		panic(err)
+	}
+	err = t.SeedPost("")
+	if err != nil {
+		panic(err)
+	}
+	err = t.GetTemplate()
+	if err != nil {
+		panic(err)
+	}
 }
+

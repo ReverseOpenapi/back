@@ -17,6 +17,7 @@ const (
 	getRequestBody = "SELECT * FROM request_body WHERE id = ?;"
 )
 
+
 func (r *requestBodyService) Get(id int) (*model.RequestBody, error) {
 	stmt, err := connector.Db.Prepare(getRequestBody)
 	if err != nil {
@@ -30,4 +31,3 @@ func (r *requestBodyService) Get(id int) (*model.RequestBody, error) {
 	}
 	return &rb, nil
 }
-
