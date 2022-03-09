@@ -120,10 +120,11 @@ class PathItem
             'summary'       => $this->summary,
             'description'   => $this->description,
             'httpMethod'    => $this->httpMethod,
+            'requestBody'   => $this->requestBody->toArray(),
             'responses'     => array_map(function ($response) {
                 return $response->toArray();
             }, $this->responses->toArray()),
-            'tags'     => array_map(function ($tag) {
+            'tags'          => array_map(function ($tag) {
                 return $tag->getName();
             }, $this->tags->toArray()),
         ];

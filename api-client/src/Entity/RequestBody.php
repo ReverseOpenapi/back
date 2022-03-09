@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RequestBodyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RequestBodyRepository::class)]
 class RequestBody
@@ -11,73 +12,40 @@ class RequestBody
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private ?int $id;
 
-    /**
-     * @var array<mixed>
-     */
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'array')]
     #[ORM\Column(type: 'json')]
-    private array $content = [];
+    private array $content;
 
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'bool')]
     #[ORM\Column(type: 'boolean')]
-    private ?bool $required = null;
+    private ?bool $required;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
+    private ?string $description;
 
     #[ORM\OneToOne(mappedBy: 'requestBody', targetEntity: PathItem::class, cascade: ['persist', 'remove'])]
     private ?PathItem $pathItem;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function __construct(array $data = []){
 
-    /**
-     * @return array<mixed>|null
-     */
-    public function getContent(): ?array
-    {
-        return $this->content;
-    }
+        if (count($data)) {
 
-    /**
-     * @param array<mixed> $content
-     */
-    public function setContent(array $content): self
-    {
-        $this->content = $content;
+            $this->required = $data['required'] ?? null;
+            $this->description = $data['description'] ?? null;
+            if(isset($data['content'])){
+                $content = [
+                    "type" =>  "object",
+                    "properties" => $data['content']
+                ];
 
-        return $this;
-    }
-
-    public function getRequired(): ?bool
-    {
-        return $this->required;
-    }
-
-    public function setRequired(bool $required): self
-    {
-        $this->required = $required;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getPathItem(): ?PathItem
-    {
-        return $this->pathItem;
+                $this->content = $content;
+            }
+        }
     }
 
     public function setPathItem(?PathItem $pathItem): self
@@ -95,5 +63,14 @@ class RequestBody
         $this->pathItem = $pathItem;
 
         return $this;
+    }
+
+    public function toArray(){
+
+        return [
+            'content'       => $this->content,
+            'required'      => $this->required,
+            'description'   => $this->description,
+        ];
     }
 }

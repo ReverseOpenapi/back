@@ -15,7 +15,8 @@ use App\Entity\{
     PathItem,
     OpenApiDocument,
     Parameter,
-    HttpResponse
+    HttpResponse,
+    RequestBody
 };
 
 #[Route('/document')]
@@ -113,6 +114,22 @@ class DocumentController extends AbstractController
 
                             $pathItemEntity->addResponse($responseItenty);
                         }
+
+
+                        if (isset($pathItem['requestBody'])) {
+
+                            $reqBodyItenty = new RequestBody($pathItem['requestBody']);
+
+                            $reqBody = $validator->getErrors($reqBodyItenty);
+
+                            if (count($reqBody)) {
+                                $errors[] = ['index' => $key, 'type' => 'paths.pathItems.response', 'errors' => $reqBody];
+                                continue;
+                            }
+
+                            $pathItemEntity->setRequestBody($reqBodyItenty);
+                        }
+
 
                         $pathEntity->addPathItem($pathItemEntity);
 
