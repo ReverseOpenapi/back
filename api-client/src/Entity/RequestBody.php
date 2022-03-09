@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\RequestBodyRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RequestBodyRepository::class)]
 class RequestBody
@@ -14,17 +13,12 @@ class RequestBody
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'array')]
     #[ORM\Column(type: 'json')]
     private array $content;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'bool')]
     #[ORM\Column(type: 'boolean')]
     private ?bool $required;
 
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 

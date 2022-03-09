@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ParameterRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ParameterRepository::class)]
 class Parameter
@@ -14,40 +13,22 @@ class Parameter
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[Assert\Type(type: 'string')]
+    #[Description]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'bool')]
     #[ORM\Column(type: 'boolean')]
     private ?bool $required;
 
-    #[Assert\NotBlank]
-    #[Assert\Choice(['query', 'header', 'path', 'cookie'])]
     #[ORM\Column(type: 'string', length: 6)]
     private ?string $location;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $name;
 
     #[ORM\ManyToOne(targetEntity: PathItem::class, inversedBy: 'parameters')]
     private ?PathItem $pathItem;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'array')]
-    #[Assert\Collection(
-        fields: [
-            'type' => [
-                new Assert\NotBlank,
-                new Assert\Type(type: 'string'),
-                new Assert\Choice(['string', 'integer', 'boolean', 'number'])
-            ]
-        ],
-        allowMissingFields: false
-    )]
     #[ORM\Column(type: 'json')]
     private array $parameterSchema;
 

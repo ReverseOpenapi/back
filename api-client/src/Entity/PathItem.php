@@ -6,7 +6,6 @@ use App\Repository\PathItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PathItemRepository::class)]
 class PathItem
@@ -16,26 +15,12 @@ class PathItem
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $summary;
 
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
-    #[Assert\NotBlank]
-    #[Assert\Choice([
-        'GET',
-        'POST',
-        'DELETE',
-        'PATCH',
-        'PUT',
-        'HEAD',
-        'CONNECT',
-        'OPTIONS',
-        'TRACE'
-    ])]
     #[ORM\Column(type: 'string', length: 7)]
     private $httpMethod;
 

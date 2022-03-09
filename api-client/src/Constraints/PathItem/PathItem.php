@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\PathItem;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Compound;
-use App\Constraints\{
+use App\Constraints\PathItem\{
     HttpMethod,
-    PathItemTags,
+    Tags,
     RequestBody,
     Responses,
-    Parameter
+    Parameters
 };
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -24,7 +24,7 @@ class PathItem extends Compound
                 'httpMethod'    => new HttpMethod,
                 'summary'       => new Assert\Optional(new Assert\Type(type: 'string')),
                 'description'   => new Assert\Optional(new Assert\Type(type: 'string')),
-                'tags'          => new Assert\Optional(new PathItemTags),
+                'tags'          => new Assert\Optional(new Tags),
                 'requestBody'   => new Assert\Optional(new RequestBody),
                 'responses'     => new Assert\Optional(new Responses),
                 'parameters'    => new Assert\Optional(new Parameters),

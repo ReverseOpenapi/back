@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\Path;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Compound;
-use App\Constraints\PathItem;
+
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class PathItems extends Compound
+class Endpoint extends Compound
 {
     protected function getConstraints(array $options): array
     {
         return [
-            new Assert\Type(type: 'array'),
-            new Assert\All([
-                'constraints' => new PathItem
-            ]),
+            new Assert\NotBlank,
+            new Assert\Type(type: 'string')
         ];
     }
 }

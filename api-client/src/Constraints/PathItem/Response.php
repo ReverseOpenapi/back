@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\PathItem;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,10 +18,8 @@ class Response extends Compound
                     new Assert\NotBlank,
                     new Assert\Type(type: 'integer')
                 ],
-                "description"       => new Assert\Type(type: 'string'),
-                "content"           => new Assert\Optional(
-                    new Assert\Type(type: 'array')
-                )
+                "description"       => new Assert\Optional(new Assert\Type(type: 'string')),
+                "content"           => new Assert\Optional(new Assert\Type(type: 'array'))
             ])
         ];
     }

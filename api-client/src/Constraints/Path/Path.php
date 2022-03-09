@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\Path;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Compound;
-use App\Constraints\PathItems;
+use App\Constraints\PathItem\PathItems;
+use App\Constraints\Path\Endpoint;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Path extends Compound
@@ -14,12 +15,8 @@ class Path extends Compound
     {
         return [
             new Assert\Collection([
-                'endpoint'  => [
-                    new Assert\NotBlank,
-                    new Assert\Type(type: 'string')
-                ],
+                'endpoint'  => new Endpoint,
                 'pathItems' => new PathItems
-            
             ])
         ];
     }

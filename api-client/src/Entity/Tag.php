@@ -6,7 +6,6 @@ use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
@@ -16,12 +15,9 @@ class Tag
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 

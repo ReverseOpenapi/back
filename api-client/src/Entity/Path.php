@@ -6,7 +6,6 @@ use App\Repository\PathRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PathRepository::class)]
 class Path
@@ -16,8 +15,6 @@ class Path
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[Assert\NotBlank]
-    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'string', length: 255)]
     private $endpoint;
 

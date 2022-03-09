@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\PathItem;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;

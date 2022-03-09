@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\Tag;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Compound;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class TagAssert extends Compound
+class Tag extends Compound
 {
     protected function getConstraints(array $options): array
     {

@@ -18,6 +18,7 @@ use App\Entity\{
     HttpResponse,
     RequestBody
 };
+use App\Model\DocumentPayload;
 
 #[Route('/document')]
 class DocumentController extends AbstractController
@@ -27,6 +28,16 @@ class DocumentController extends AbstractController
     public function create(Request $request, ManagerRegistry $doctrine, Validator $validator): Response
     {
         $data = json_decode($request->getContent(), true) ?? [];
+
+        $payload = new DocumentPayload($data);
+
+        $errors = $validator->getErrors($payload);
+
+        dd('ok', $errors);
+
+
+
+
 
         $document = new OpenApiDocument($data);
 

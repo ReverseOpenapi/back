@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\PathItem;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Compound;
-use App\Constraints\Response;
+use App\Constraints\PathItem\Response;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Responses extends Compound

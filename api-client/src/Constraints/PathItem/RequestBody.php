@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Constraints;
+namespace App\Constraints\PathItem;
 
 use Attribute;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,7 +15,7 @@ class RequestBody extends Compound
         return [
             new Assert\Type(type: 'array'),
             new Assert\Collection([
-                'description'   => new Assert\Type(type: 'string'),
+                'description'   => new Assert\Optional(new Assert\Type(type: 'string')),
                 'required'      => [
                     new Assert\NotBlank,
                     new Assert\Type(type: 'bool')
