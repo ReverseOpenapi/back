@@ -20,9 +20,11 @@ class PathItem
     #[ORM\JoinColumn(nullable: false)]
     private ?Path $path;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $summary;
 
+    #[Assert\Type(type: 'string')]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
@@ -41,7 +43,7 @@ class PathItem
         'OPTIONS',
         'TRACE'
     ])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 7)]
     private $httpMethod;
 
     #[ORM\OneToOne(inversedBy: 'pathItem', targetEntity: RequestBody::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
