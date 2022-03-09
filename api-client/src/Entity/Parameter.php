@@ -44,7 +44,7 @@ class Parameter
             'type' => [
                 new Assert\NotBlank,
                 new Assert\Type(type: 'string'),
-                new Assert\Choice(['integer', 'boolean', 'array', 'object'])
+                new Assert\Choice(['string', 'integer', 'boolean', 'number'])
             ]
         ],
         allowMissingFields: false
