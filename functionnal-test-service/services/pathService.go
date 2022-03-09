@@ -8,6 +8,7 @@ import (
 
 type pathInterface interface {
 	Get(id int) (*model.Path, error)
+	GetByOpenApiId(openApiId int) (*[]model.Path, error)
 }
 
 type pathDao struct {}
@@ -16,9 +17,8 @@ var   PathService pathInterface = &pathDao{}
 
 const (
 	getPath = "SELECT * FROM `path` WHERE id = ?;"
-
+	getByOpenApi = "SELECT * FROM `path` WHERE open_api_document_id = ?;"
 )
-
 
 func (p pathDao) Get(id int) (*model.Path, error) {
 	stmt, err := connector.Db.Prepare(getPath)
@@ -33,4 +33,27 @@ func (p pathDao) Get(id int) (*model.Path, error) {
 		return nil, err
 	}
 	return &path, nil
+}
+
+
+func (p pathDao) GetByOpenApiId(openApiId int) (*[]model.Path, error) {
+	stmt, err := connector.Db.Prepare(getByOpenApi)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query(openApiId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	result := make([]model.Path, 0)
+	for rows.Next() {
+		var path model.Path
+		if err = rows.Scan(&path.Id, &path.OpenApiDocumentId, &path.Endpoint); err != nil {
+			return nil, err
+		}
+		result = append(result, path)
+	}
+	return &result, nil
 }

@@ -1,12 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/back/functionnal-test-service/connector"
-	"github.com/back/functionnal-test-service/integrationTemplate"
-	"github.com/back/functionnal-test-service/model"
-	"github.com/back/functionnal-test-service/services"
-	"github.com/back/functionnal-test-service/utils/files"
+	"github.com/back/functionnal-test-service/manager"
 )
 
 func checkEnv() []string {
@@ -25,7 +21,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	g := model.HttpMeth
+
+	err = manager.TemplateManager.Manager(1)
+	/* g := model.HttpMeth
 	o, err := g.GetHttpMethod(3)
 	if err != nil {
 		fmt.Println("zfdfdsdf")
@@ -67,11 +65,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}*/
-
+/*
 	getTemplate := integrationTemplate.NewGetTemplate("localhost", requestBody.Content, "", r.Endpoint, 200)
 	err = getTemplate.Get()
 	if err != nil {
 		panic(err)
-	}
+	}* /
+*/
 }
 

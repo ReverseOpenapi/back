@@ -24,11 +24,11 @@ func (o openDocumentService) Get(idOpenApi int) (*model.OpenApiDocument, error) 
 		return nil, err
 	}
 	defer stmt.Close()
-	var openApi *model.OpenApiDocument
+	var openApi model.OpenApiDocument
 	result := stmt.QueryRow(idOpenApi)
 	if err = result.Scan(&openApi.Id, &openApi.Title, &openApi.Description); err != nil {
 		fmt.Println("this is the error man: ", err)
 		return nil, err
 	}
-	return openApi, nil
+	return &openApi, nil
 }

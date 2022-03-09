@@ -4,5 +4,5 @@ type OpenApiDocument struct {
 	Id int
 	// User ?
 	Title string
-	Description string
+	Description *string
 }
