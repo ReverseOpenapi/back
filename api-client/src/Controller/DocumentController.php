@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Utils\Validator;
 use App\Repository\OpenApiDocumentRepository;
 use Ramsey\Uuid\Uuid;
-use App\Entity\{Tag, Path, PathItem, OpenApiDocument};
+use App\Entity\{Tag, Path, PathItem, OpenApiDocument, Parameter};
 
 #[Route('/document')]
 class DocumentController extends AbstractController
@@ -78,6 +78,21 @@ class DocumentController extends AbstractController
                         }
 
                         $pathEntity->addPathItem($pathItemEntity);
+
+                        foreach ($pathItem['parameters'] as $key => $parameter) {
+
+                            $parameterItenty = new Parameter($parameter);
+
+                            $parameterErrors = $validator->getErrors($parameterItenty);
+
+                            if (count($parameterErrors)) {
+                                $errors[] = ['index' => $key, 'type' => 'paths.pathItems.parameters', 'errors' => $parameterErrors];
+                                continue;
+                            }
+    
+                            $pathEntity->addParameter($parameterItenty);
+                        }
+
                     }
                 }
 
