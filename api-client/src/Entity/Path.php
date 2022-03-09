@@ -77,43 +77,11 @@ class Path
         return $this;
     }
 
-    public function removePathItem(PathItem $pathItem): self
-    {
-        if ($this->pathItems->removeElement($pathItem)) {
-            // set the owning side to null (unless already changed)
-            if ($pathItem->getPath() === $this) {
-                $pathItem->setPath(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Parameter[]
-     */
-    public function getParameters(): Collection
-    {
-        return $this->parameters;
-    }
-
     public function addParameter(Parameter $parameter): self
     {
         if (!$this->parameters->contains($parameter)) {
             $this->parameters[] = $parameter;
             $parameter->setPath($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParameter(Parameter $parameter): self
-    {
-        if ($this->parameters->removeElement($parameter)) {
-            // set the owning side to null (unless already changed)
-            if ($parameter->getPath() === $this) {
-                $parameter->setPath(null);
-            }
         }
 
         return $this;
