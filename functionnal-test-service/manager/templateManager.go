@@ -80,7 +80,7 @@ func (t templateManager) Manager(idOpenApi int) error {
 			}
 			switch httpMethod.Method {
 			case "GET":
-				getTemplate := integrationTemplate.NewGetTemplate("localhost", httpResponse[1].Content, "", path.Endpoint, httpResponse[1].HttpStatusCode, f)
+				getTemplate := integrationTemplate.NewGetTemplate("localhost", httpResponse[0].Content, "", path.Endpoint, httpResponse[0].HttpStatusCode, f)
 				err = t.GetTemplateManager(getTemplate)
 				if err != nil {
 					return err

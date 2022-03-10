@@ -37,8 +37,8 @@ func TestGetOne(t *testing.T) {
 		statusCode int
 		errMessage string
 	} {
-		content: `[]`,
-		statusCode: 400,
+		content: `["{ \"id\": 0", "\"name\": \"doggie\"", "\"status\": \"available\" }"]`,
+		statusCode: 200,
 		errMessage: "",
 	}
 
