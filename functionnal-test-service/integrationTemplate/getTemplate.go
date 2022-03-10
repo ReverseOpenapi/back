@@ -1,7 +1,9 @@
 package integrationTemplate
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/back/functionnal-test-service/model"
 	"os"
 	"path"
 	"text/template"
@@ -9,8 +11,9 @@ import (
 
 type getTemplate struct {
 	url string
-	httpResponse string
-	statusCode int
+	httpResponse []*model.HttpResponse
+//	httpResponse []string
+//	statusCode []int
 	err string
 	pathItem string
 	f *os.File
@@ -18,7 +21,7 @@ type getTemplate struct {
 
 type GetTemplateInterface interface {
 	SeedMessage()
-	Get() error
+	Get(int) error
 }
 
 var (
@@ -26,11 +29,11 @@ var (
 )
 
 
-func NewGetTemplate(url, httpResponse, err, pathItem string, statusCode int, f *os.File) GetTemplateInterface {
+func NewGetTemplate(url, err, pathItem string, httpResponse []*model.HttpResponse, f *os.File) GetTemplateInterface {
 	GetTemplate = &getTemplate{
 		url: url,
 		httpResponse: httpResponse,
-		statusCode: statusCode,
+		//statusCode: statusCode,
 		err: err,
 		pathItem: pathItem,
 		f: f,
@@ -42,48 +45,91 @@ func (g *getTemplate) SeedMessage() {
 	fmt.Println("fdsf")
 }
 
-func (g *getTemplate) Get() error {
-	temp, err := template.New("Get").Parse(`func TestGetOne(t *testing.T) {
+func createSample(httpResponses []*model.HttpResponse) (string, error) {
+	var tpl bytes.Buffer
+	t, err  := template.New("Sample").Parse(`samples := []struct{
+		content string
+		statusCode int
+		errMessage string
+	} { 
+`)
+	if 	err != nil {
+		return "", err
+	}
+	if err := t.Execute(&tpl, ""); err != nil {
+		return "", err
+	}
+	for _, response := range httpResponses {
+		s, err := template.New("data").Parse(`{
+		content: {{.Content}},
+		statusCode: {{.StatusCode}},
+		errMessage: "",
+	}, `)
+		sampleStruct := struct {
+			Content string
+			StatusCode int
+		}{
+			fmt.Sprintf("`%v`", path.Clean(response.Content)),
+			response.HttpStatusCode,
+		}
+		if err != nil {
+			return "", err
+		}
+		if err := s.Execute(&tpl, sampleStruct); err != nil{
+			return "", err
+		}
+	}
+	end, err := template.New("end").Parse(`
+}`)
+	if err != nil {
+		return "", err
+	}
+	if err = end.Execute(&tpl, ""); err != nil {
+		return "", nil
+	}
+	return tpl.String(), nil
+}
+
+
+func (g *getTemplate) Get(testNumber int) error {
+	temp, err := template.New("Get").Parse(`func TestGetOne{{.TestNumber}}(t *testing.T) {
 	_, err := seedElement()
 	if err != nil {
 		t.Errorf("Error while seeding table: %s", err)
 	}
+	{{.Sample}}
 
-	samples := struct{
-		content string
-		statusCode int
-		errMessage string
-	} {
-		content: {{.Content}},
-		statusCode: {{.StatusCode}},
-		errMessage: "{{.Err}}",
-	}
-
-	resp, err := http.Get("http://{{.Url}}:8000{{.PathItem}}")
-	if err != nil {
-		t.Errorf("Server unavailable")	
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Errorf("Error on reading body response")
-	}
-	assert.Equal(t, samples.statusCode, resp.StatusCode)
-	if resp.StatusCode == samples.statusCode {
-		assert.Equal(t, samples.content, string(body))
+	for _, v := range samples {
+		resp, err := http.Get("http://{{.Url}}:8000{{.PathItem}}")
+		if err != nil {
+			t.Errorf("Server unavailable")	
+		}
+		defer resp.Body.Close()
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			t.Errorf("Error on reading body response")
+		}
+		assert.Equal(t, v.statusCode, resp.StatusCode)
+		if resp.StatusCode == v.statusCode {
+			assert.Equal(t, v.content, string(body))
+		}
 	}
 }
 `)
-	fmt.Printf("`%v`\n", path.Clean(g.httpResponse))
+	//fmt.Printf("`%v`\n", path.Clean(g.httpResponse))
+	samples, err := createSample(g.httpResponse)
+	if err != nil {
+		return err
+	}
 	 tt := struct {
-		Content string
-		StatusCode int
-		Err	string
-		Url string
-		PathItem string
+		 TestNumber int
+		 Sample string
+		 Err	string
+		 Url string
+		 PathItem string
 	} {
-		Content: fmt.Sprintf("`%v`", path.Clean(g.httpResponse)), //`"{\"id\":1,\"description\":\"fsdfdsfdf\"}",`,
-		StatusCode: g.statusCode,
+		 TestNumber: testNumber,
+		Sample: samples,
 		Url: g.url,
 		Err: g.err,
 		PathItem: g.pathItem,
@@ -95,3 +141,35 @@ func (g *getTemplate) Get() error {
 	}
 	return nil
 }
+
+
+/*
+samples := struct{
+		content string
+		statusCode int
+		errMessage string
+	} {
+		content: {{.Content}},
+		statusCode: {{.StatusCode}},
+		errMessage: "{{.Err}}",
+	}
+
+resp, err := http.Get("http://{{.Url}}:8000{{.PathItem}}")
+	if err != nil {
+		t.Errorf("Server unavailable")
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		t.Errorf("Error on reading body response")
+	}
+	assert.Equal(t, samples.statusCode, resp.StatusCode)
+	if resp.StatusCode == samples.statusCode {
+		assert.Equal(t, samples.content, string(body))
+	}
+	if v.statusCode == 400 || v.statusCode == 422 && v.errMessage != "" {
+			assert.Equal(t, , v.errMessage)
+		}
+}
+ */

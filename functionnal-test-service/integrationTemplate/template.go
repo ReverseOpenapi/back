@@ -48,41 +48,11 @@ func (t *integrationTemplate) Header() error {
 	if err != nil {
 		return err
 	}
-	/*f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}*/
 	type header struct {}
 	h := header{}
 	err = temp.Execute(t.f, h)
 	return nil
 }
-
-/*
-func seed() {
-	temp, err  := template.New("SeedPost").Parse(`	msg := domain.Message{
-		Title: "the title",
-		Body: "the body",
-		CreatedAt: time.Now(),
-	}
-	stmt, err := dbConn.Prepare(queryInsertMessage)
-	if err != nil {
-		panic(err.Error())
-	}
-	insertResult, err := stmt.Exec(msg.Title, msg.Body, msg.CreatedAt)
-	if err != nil {
-		log.Fatalf("Error creating message: %s", err)
-	}
-	msgId, err := insertResult.LastInsertId()
-	if err != nil {
-		log.Fatalf("Error creating message: %s", err)
-	}
-	msg.Id = msgId
-	return msg, nil
-`)
-
-}
-*/
 
 func (t *integrationTemplate) SeedPost(postElement string) error {
 	temp, err  := template.New("SeedPost").Parse(`func seedElement() (interface{}, error) {

@@ -26,33 +26,44 @@ func seedElement() (interface{}, error) {
 	return "", nil
 }
 
-func TestGetOne(t *testing.T) {
+func TestGetOne0(t *testing.T) {
 	_, err := seedElement()
 	if err != nil {
 		t.Errorf("Error while seeding table: %s", err)
 	}
-
-	samples := struct{
+	samples := []struct{
 		content string
 		statusCode int
 		errMessage string
-	} {
+	} { 
+{
 		content: `["{ \"id\": 0", "\"name\": \"doggie\"", "\"status\": \"available\" }"]`,
 		statusCode: 200,
 		errMessage: "",
-	}
+	}, {
+		content: `[]`,
+		statusCode: 400,
+		errMessage: "",
+	}, {
+		content: `[]`,
+		statusCode: 404,
+		errMessage: "",
+	}, 
+}
 
-	resp, err := http.Get("http://localhost:8000/pet/{id}")
-	if err != nil {
-		t.Errorf("Server unavailable")	
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		t.Errorf("Error on reading body response")
-	}
-	assert.Equal(t, samples.statusCode, resp.StatusCode)
-	if resp.StatusCode == samples.statusCode {
-		assert.Equal(t, samples.content, string(body))
+	for _, v := range samples {
+		resp, err := http.Get("http://localhost:8000/pet/{id}")
+		if err != nil {
+			t.Errorf("Server unavailable")	
+		}
+		defer resp.Body.Close()
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			t.Errorf("Error on reading body response")
+		}
+		assert.Equal(t, v.statusCode, resp.StatusCode)
+		if resp.StatusCode == v.statusCode {
+			assert.Equal(t, v.content, string(body))
+		}
 	}
 }

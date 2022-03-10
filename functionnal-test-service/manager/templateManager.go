@@ -10,7 +10,7 @@ import (
 
 type templateManagerInterface interface {
 	Manager(int) error
-	GetTemplateManager(item integrationTemplate.GetTemplateInterface) error
+	GetTemplateManager(item integrationTemplate.GetTemplateInterface, testNumber int) error
 	PostTemplateManager()
 	DeleteTemplateManager()
 	UpdateTemplateManager()
@@ -68,7 +68,7 @@ func (t templateManager) Manager(idOpenApi int) error {
 		if err != nil {
 			return err
 		}
-		for _, item := range pathItems {
+		for i, item := range pathItems {
 			httpResponse, err := services.HttpReponseService.GetByPathItem(item.Id)
 			if err != nil {
 				return err
@@ -80,8 +80,8 @@ func (t templateManager) Manager(idOpenApi int) error {
 			}
 			switch httpMethod.Method {
 			case "GET":
-				getTemplate := integrationTemplate.NewGetTemplate("localhost", httpResponse[0].Content, "", path.Endpoint, httpResponse[0].HttpStatusCode, f)
-				err = t.GetTemplateManager(getTemplate)
+				getTemplate := integrationTemplate.NewGetTemplate("localhost", "", path.Endpoint, httpResponse, f)
+				err = t.GetTemplateManager(getTemplate, i)
 				if err != nil {
 					return err
 				}
@@ -92,11 +92,10 @@ func (t templateManager) Manager(idOpenApi int) error {
 	return nil
 }
 
-func (t templateManager) GetTemplateManager(pathItem integrationTemplate.GetTemplateInterface) error {
+func (t templateManager) GetTemplateManager(pathItem integrationTemplate.GetTemplateInterface, testNumber int) error {
 	fmt.Println(pathItem)
-	err := pathItem.Get()
+	err := pathItem.Get(testNumber)
 	if err != nil {
-		fmt.Println("HAAAAAA")
 		return err
 	}
 	return nil
