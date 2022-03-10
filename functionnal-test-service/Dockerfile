@@ -12,6 +12,5 @@ COPY . .
 # Install 'air' live-reload go module
 RUN go get -u github.com/cosmtrek/air
 
-
 # Run the excutable
 ENTRYPOINT ["/go/bin/air"]

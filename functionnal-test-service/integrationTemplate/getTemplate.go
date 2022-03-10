@@ -17,6 +17,7 @@ type getTemplate struct {
 	err string
 	pathItem string
 	f *os.File
+	randomStringSeed string
 }
 
 type GetTemplateInterface interface {
@@ -29,7 +30,7 @@ var (
 )
 
 
-func NewGetTemplate(url, err, pathItem string, httpResponse []*model.HttpResponse, f *os.File) GetTemplateInterface {
+func NewGetTemplate(url, err, pathItem, randomStringSeed string, httpResponse []*model.HttpResponse, f *os.File) GetTemplateInterface {
 	GetTemplate = &getTemplate{
 		url: url,
 		httpResponse: httpResponse,
@@ -37,6 +38,7 @@ func NewGetTemplate(url, err, pathItem string, httpResponse []*model.HttpRespons
 		err: err,
 		pathItem: pathItem,
 		f: f,
+		randomStringSeed: randomStringSeed,
 	}
 	return GetTemplate
 }
@@ -92,8 +94,8 @@ func createSample(httpResponses []*model.HttpResponse) (string, error) {
 
 
 func (g *getTemplate) Get(testNumber int) error {
-	temp, err := template.New("Get").Parse(`func TestGetOne{{.TestNumber}}(t *testing.T) {
-	_, err := seedElement()
+	temp, err := template.New("Get").Parse(`func TestGet{{.TestNumber}}(t *testing.T) {
+	_, err := seedElement{{.RandomStringSeed}}()
 	if err != nil {
 		t.Errorf("Error while seeding table: %s", err)
 	}
@@ -127,12 +129,14 @@ func (g *getTemplate) Get(testNumber int) error {
 		 Err	string
 		 Url string
 		 PathItem string
+		 RandomStringSeed string
 	} {
 		 TestNumber: testNumber,
 		Sample: samples,
 		Url: g.url,
 		Err: g.err,
 		PathItem: g.pathItem,
+		RandomStringSeed: g.randomStringSeed,
 	}
 	fmt.Println(g.f)
 	err = temp.Execute(g.f, tt)
@@ -141,35 +145,3 @@ func (g *getTemplate) Get(testNumber int) error {
 	}
 	return nil
 }
-
-
-/*
-samples := struct{
-		content string
-		statusCode int
-		errMessage string
-	} {
-		content: {{.Content}},
-		statusCode: {{.StatusCode}},
-		errMessage: "{{.Err}}",
-	}
-
-resp, err := http.Get("http://{{.Url}}:8000{{.PathItem}}")
-	if err != nil {
-		t.Errorf("Server unavailable")
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		t.Errorf("Error on reading body response")
-	}
-	assert.Equal(t, samples.statusCode, resp.StatusCode)
-	if resp.StatusCode == samples.statusCode {
-		assert.Equal(t, samples.content, string(body))
-	}
-	if v.statusCode == 400 || v.statusCode == 422 && v.errMessage != "" {
-			assert.Equal(t, , v.errMessage)
-		}
-}
- */

@@ -1,30 +1,45 @@
 package connector
 
 import (
-	"fmt"
+	"errors"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
+	"os"
 )
 
-
-const (
-	Region      = "eu-west-3"
-	//CredPath    = "/Users/home/.aws/credentials"
-	//CredProfile = "aws-cred-profile"
-)
-
-func ConnectQueue() {
+func getSession() *session.Session {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
+		Config: aws.Config{
+			Region: aws.String("eu-west-3"),
+		},
 	}))
-	svc := sqs.New(sess)
+	return sess
+}
 
-	result, err := svc.ListQueues(nil)
-	for i, url := range result.QueueUrls {
-		fmt.Printf("%d: %s\n", i, *url)
-	}
+func ReceiveMessage() (*sqs.ReceiveMessageOutput, error) {
+	sess := getSession()
+	svc := sqs.New(sess)
+	qURL := os.Getenv("SQS_QUEUE")
+	result, err := svc.ReceiveMessage(&sqs.ReceiveMessageInput{
+		AttributeNames: []*string{
+			aws.String(sqs.MessageSystemAttributeNameSentTimestamp),
+		},
+		MessageAttributeNames: []*string{
+			aws.String(sqs.QueueAttributeNameAll),
+		},
+		QueueUrl:            &qURL,
+		MaxNumberOfMessages: aws.Int64(10),
+		VisibilityTimeout:   aws.Int64(60), // 60 seconds
+		WaitTimeSeconds:     aws.Int64(20),
+	})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+	if len(result.Messages) == 0 {
+		return nil, errors.New("Received no messages")
+	}
+	return result, nil
 }
 

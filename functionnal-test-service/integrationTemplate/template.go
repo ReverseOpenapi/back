@@ -11,7 +11,7 @@ type integrationTestInterface interface {
 	GetAllTemplate() error
 	PutTemplate() error
 	DeleteTemplate() error
-	SeedPost(string) error
+	SeedPost(string, string) error
 	Header() error
 }
 
@@ -54,8 +54,8 @@ func (t *integrationTemplate) Header() error {
 	return nil
 }
 
-func (t *integrationTemplate) SeedPost(postElement string) error {
-	temp, err  := template.New("SeedPost").Parse(`func seedElement() (interface{}, error) {
+func (t *integrationTemplate) SeedPost(postElement string, randomString string) error {
+	temp, err  := template.New("SeedPost").Parse(`func seedElement{{.RandomString}}() (interface{}, error) {
 	return "", nil
 	resp, err := http.Get("{{.Url}}")
 
@@ -76,16 +76,18 @@ func (t *integrationTemplate) SeedPost(postElement string) error {
 `)
 	type ay struct {
 		Url string
+		RandomString string
 	}
 	o := ay{
 		Url: "localhost",
+		RandomString: randomString,
 	}
-	f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	defer f.Close()
+	//f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	//defer f.Close()
 	if err != nil {
 		return err
 	}
-	err = temp.Execute(f, o)
+	err = temp.Execute(t.f, o)
 	if err != nil {
 		return err
 	}

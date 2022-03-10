@@ -1,6 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/back/functionnal-test-service/connector"
 	"github.com/back/functionnal-test-service/manager"
 	"github.com/joho/godotenv"
@@ -17,10 +21,31 @@ func checkEnv() []string {
 
 	return errs
 }
+func GetQueues(sess *session.Session) (*sqs.ListQueuesOutput, error) {
+	// Create an SQS service client
+	// snippet-start:[sqs.go.list_queues.call]
+	svc := sqs.New(sess)
+
+	result, err := svc.ListQueues(nil)
+	// snippet-end:[sqs.go.list_queues.call]
+	if err != nil {
+		fmt.Println("dfssdf")
+		return nil, err
+	}
+
+	return result, nil
+}
+
+
 
 func main() {
+	messages, err := connector.ReceiveMessage()
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	dsn := connector.NewMysqlDb(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"), os.Getenv("DB_HOSTS"))
-	err := dsn.InitDb()
+	err = dsn.InitDb()
 	if err != nil {
 		panic(err)
 	}
@@ -29,59 +54,22 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	err = manager.TemplateManager.Manager("8741762d-004a-4747-9867-863e36ad2114")
-	if err != nil {
-		panic(err)
+	fmt.Println(*messages.Messages[0].Body)
+	for _, message := range messages.Messages {
+		type documentId struct {
+			DocumentId string
+		}
+		di := documentId{}
+		err = json.Unmarshal([]byte(*message.Body), &di)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = manager.TemplateManager.Manager(di.DocumentId)
+		if err != nil {
+			panic(err)
+		}
 	}
-	/* g := model.HttpMeth
-	o, err := g.GetHttpMethod(3)
-	if err != nil {
-		fmt.Println("zfdfdsdf")
-	}
-
-	fmt.Println(o.Method)
-	fmt.Println("OUIII")
-	a := services.PathService
-	r, err := a.Get(1)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(r.Endpoint)
-	fmt.Println(r.OpenApiDocumentId)
-	l, err := services.PathItemService.GetByPAth(r.Id)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(l[0].RequestMethodId)
-	requestBody, err := services.RequestBodyService.Get(l[0].RequestMethodId)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(requestBody.Content)
-	pwdPath := "./.export/1/integration_pet_test.go"
-	t := integrationTemplate.NewTemplate("localhost")
-	err = files.CreateFile(pwdPath)
-	err = t.Header()
-	if err != nil {
-		panic(err)
-	}
-	err = t.SeedPost("")
-	if err != nil {
-		fmt.Println("fsddsdfs")
-
-		panic(err)
-	}
-	/* err = t.GetTemplate()
-	if err != nil {
-		panic(err)
-	}*/
-/*
-	getTemplate := integrationTemplate.NewGetTemplate("localhost", requestBody.Content, "", r.Endpoint, 200)
-	err = getTemplate.Get()
-	if err != nil {
-		panic(err)
-	}* /
-*/
 }
+
 

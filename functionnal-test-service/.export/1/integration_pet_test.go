@@ -67,3 +67,75 @@ func TestGetOne0(t *testing.T) {
 		}
 	}
 }
+func seedElement() (interface{}, error) {
+	return "", nil
+	resp, err := http.Get("localhost")
+
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    defer resp.Body.Close()
+
+    _, err = io.Copy(os.Stdout, resp.Body)
+
+    if err != nil {
+      log.Fatal(err)
+    }
+	return "", nil
+}
+
+func seedElement() (interface{}, error) {
+	return "", nil
+	resp, err := http.Get("localhost")
+
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    defer resp.Body.Close()
+
+    _, err = io.Copy(os.Stdout, resp.Body)
+
+    if err != nil {
+      log.Fatal(err)
+    }
+	return "", nil
+}
+
+func seedElement() (interface{}, error) {
+	return "", nil
+	resp, err := http.Get("localhost")
+
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    defer resp.Body.Close()
+
+    _, err = io.Copy(os.Stdout, resp.Body)
+
+    if err != nil {
+      log.Fatal(err)
+    }
+	return "", nil
+}
+
+func seedElement() (interface{}, error) {
+	return "", nil
+	resp, err := http.Get("localhost")
+
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    defer resp.Body.Close()
+
+    _, err = io.Copy(os.Stdout, resp.Body)
+
+    if err != nil {
+      log.Fatal(err)
+    }
+	return "", nil
+}
+

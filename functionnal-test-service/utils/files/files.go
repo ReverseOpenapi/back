@@ -13,6 +13,14 @@ func CreateFile(url string)   error {
 	return nil
 }
 
+func CreateDirectory(pwdDir string) error {
+	err := os.MkdirAll(pwdDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func openFile(url string) (*os.File, error)  {
 	f, err := os.OpenFile(url, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
