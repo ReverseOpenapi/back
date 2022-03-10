@@ -141,7 +141,7 @@ class PathItem
             'httpMethod'    => $this->httpMethod,
         ];
 
-        if($this->requestBody) $baseEntity['requestBody'] =  $this->requestBody->toArray();
+        if(isset($this->requestBody)) $baseEntity['requestBody'] = $this->requestBody->toArray();
 
         if (count($this->responses)) {
 

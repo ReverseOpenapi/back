@@ -92,6 +92,7 @@ class OpenApiDocument
     public function toArray() : array
     {
         return [
+            'id'                => $this->id,
             'title'             => $this->title,
             'description'       => $this->description,
             'version'           => $this->version,

@@ -269,7 +269,7 @@ class DocumentController extends AbstractController
 
         return new JsonResponse([
             'success'    => true,
-            'data'      => ['id' => $document->getId()]
+            'data'       => $document->toArray()
         ], Response::HTTP_OK);
     }
 
