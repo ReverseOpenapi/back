@@ -15,7 +15,8 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Route\Document\Create;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\HeaderUtils;
-
+use App\Messenger\Message\CreateOpenApiDocument;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 
 #[Route('/api/document')]
@@ -239,7 +240,7 @@ class DocumentController extends AbstractController
         )
     )]
     #[Route('', name: 'document_create', methods: ['POST'])]
-    public function create(Request $request, ManagerRegistry $doctrine, Validator $validator): JsonResponse
+    public function create(Request $request, ManagerRegistry $doctrine, Validator $validator, MessageBusInterface $bus): JsonResponse
     {
         $data = json_decode($request->getContent(), true) ?? [];
 
@@ -263,6 +264,8 @@ class DocumentController extends AbstractController
         $em->persist($document);
 
         $em->flush();
+
+        $bus->dispatch(new CreateOpenApiDocument($document->getId()));
 
         return new JsonResponse([
             'success'    => true,
