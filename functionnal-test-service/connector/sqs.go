@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func getSession() *session.Session {
+func GetSession() *session.Session {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 		Config: aws.Config{
@@ -19,7 +19,7 @@ func getSession() *session.Session {
 }
 
 func ReceiveMessage() (*sqs.ReceiveMessageOutput, error) {
-	sess := getSession()
+	sess := GetSession()
 	svc := sqs.New(sess)
 	qURL := os.Getenv("SQS_QUEUE")
 	result, err := svc.ReceiveMessage(&sqs.ReceiveMessageInput{
