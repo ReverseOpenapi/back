@@ -1,7 +1,6 @@
 package manager
 
 import (
-	"fmt"
 	"github.com/back/functionnal-test-service/integrationTemplate"
 	"github.com/back/functionnal-test-service/services"
 	"github.com/back/functionnal-test-service/utils"
@@ -17,11 +16,9 @@ type templateManagerInterface interface {
 	UpdateTemplateManager()
 }
 
-
 type templateManager struct {}
 
 var TemplateManager templateManagerInterface = &templateManager{}
-
 
 func FileCreate(pwdFile string) (*os.File, error) {
 	err := files.CreateFile(pwdFile)
@@ -54,8 +51,6 @@ func (t templateManager) Manager(idOpenApi string) error {
 		return err
 	}
 	for _, tag := range tags {
-		fmt.Println(tag)
-
 		f, err := FileCreate("./.export/" + idOpenApi + "/integration_" + tag.Name + "_test.go")
 		if err != nil {
 			return err
@@ -65,7 +60,6 @@ func (t templateManager) Manager(idOpenApi string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("Print un peu le tag id mon pite", tag.Id)
 		pathItems, err := services.PathItemService.GetByTagId(tag.Id)
 		if err != nil {
 			return err
@@ -152,7 +146,6 @@ func (t templateManager) Manager(idOpenApi string) error {
 
 
 func (t templateManager) GetTemplateManager(pathItem integrationTemplate.GetTemplateInterface, testNumber int) error {
-	fmt.Println(pathItem)
 	err := pathItem.Get(testNumber)
 	if err != nil {
 		return err

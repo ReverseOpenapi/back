@@ -138,7 +138,6 @@ func (g *getTemplate) Get(testNumber int) error {
 		PathItem: g.pathItem,
 		RandomStringSeed: g.randomStringSeed,
 	}
-	fmt.Println(g.f)
 	err = temp.Execute(g.f, tt)
 	if err != nil {
 		return err

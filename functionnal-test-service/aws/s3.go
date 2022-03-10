@@ -17,7 +17,7 @@ func UploadFileOnS3(openApiId string) error {
 	}
 	fileExport := "./functional-test/" + openApiId + ".zip"
 	res, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket:  aws.String("prod-reverseopenapi"),
+		Bucket:  aws.String(os.Getenv("S3_BUCKET")),
 		Key: aws.String(fileExport),
 		Body: f,
 	})
@@ -28,4 +28,3 @@ func UploadFileOnS3(openApiId string) error {
 	fmt.Printf("file uploaded to, %s\n", aws.StringValue(&res.Location))
 	return nil
 }
-

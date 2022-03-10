@@ -2,7 +2,6 @@ package services
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/back/functionnal-test-service/connector"
 	"github.com/back/functionnal-test-service/model"
 )
@@ -42,7 +41,6 @@ func (h httpResponseService) GetByPathItem(idPathItem int) ([]*model.HttpRespons
 				Properties map[string]interface{} `json:"properties"`
 			}
 			jR := &jsonResponse{}
-			fmt.Println(httpResponse.Content)
 			err = json.Unmarshal([]byte(httpResponse.Content), &jR)
 			if err != nil {
 				return nil, err

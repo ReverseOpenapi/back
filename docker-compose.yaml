@@ -40,6 +40,7 @@ services:
            AWS_ACCESS_KEY_ID: AKIA27SICEV2BHRIBI6S
            AWS_SECRET_ACCESS_KEY: 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
            AWS_LOAD_CONFIG: /app/.aws
+           S3_BUCKET: prod-reverseopenapi
            SQS_QUEUE: https://sqs.eu-west-3.amazonaws.com/754991637876/Functional-test-Service
          volumes:
              - "./functionnal-test-service:/app"
