@@ -39,7 +39,7 @@ class CreateOpenApiDocumentHandlerTest extends WebTestCase
 
         $this->assertJsonFileEqualsJsonFile(
             $this->directory . '/../../tests/Fixtures/openapi.json',
-            $this->directory . '/' . $openApiDocument->getId() . '.json'
+            $this->directory . '/document/' . $openApiDocument->getId() . '.json'
         );
     }
 
