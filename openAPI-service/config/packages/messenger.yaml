@@ -13,7 +13,7 @@ framework:
                     max_retries: 0
 
             sqs_dead_letter_queue:
-                dsn: "%env(SQS_DQL_TRANSPORT_DSN)%"
+                dsn: "%env(SQS_DLQ_TRANSPORT_DSN)%"
                 options:
                     auto_setup: false
 
