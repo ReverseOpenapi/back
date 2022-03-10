@@ -22,7 +22,7 @@ class CreateOpenaApiDocumentHandler implements MessageHandlerInterface
     public function __invoke(CreateOpenApiDocument $message)
     {
         $document = $this->generator->generate($message->getDocumentId());
-        $this->filesystem->write($document->getId() . '.json', $document->toJson(), true);
+        $this->filesystem->write('document/' .$document->getId() . '.json', $document->toJson(), true);
     }
 }
 
