@@ -31,7 +31,16 @@ services:
          container_name: reverse-openapi_functionnal-test-service
          build: ./functionnal-test-service
          environment:
-           DB_HOST: reverse-openapi_db
+           #DB_HOST: reverse-openapi_db
+           DB_PASSWORD: fkwyAbBRMqq5R5xt
+           DB_HOSTS: dev-reverseopenapi.clvlxhmupsss.eu-west-3.rds.amazonaws.com
+           DB_USER: admin
+           DB_PORT: 3306
+           DB_NAME: reverse-openapi
+           AWS_ACCESS_KEY_ID: AKIA27SICEV2BHRIBI6S
+           AWS_SECRET_ACCESS_KEY: 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
+           AWS_LOAD_CONFIG: /app/.aws
+           SQS_QUEUE: https://sqs.eu-west-3.amazonaws.com/754991637876/Functional-test-Service
          volumes:
              - "./functionnal-test-service:/app"
          links:

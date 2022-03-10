@@ -1,3 +1,4 @@
 tmp/
 go.sum
 .env
+.aws

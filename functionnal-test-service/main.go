@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/back/functionnal-test-service/aws"
 	"github.com/back/functionnal-test-service/connector"
 	"github.com/back/functionnal-test-service/manager"
 	"github.com/back/functionnal-test-service/utils/zip"
@@ -50,6 +51,10 @@ func main() {
 			panic(err)
 		}
 		err := zip.ZipSource("./.export/" + di.DocumentId, "./.export/" + di.DocumentId + ".zip")
+		if err != nil {
+			log.Println(err)
+		}
+		err = aws.UploadFileOnS3(di.DocumentId)
 		if err != nil {
 			log.Println(err)
 		}
