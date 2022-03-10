@@ -15,13 +15,22 @@ use App\Model\DocumentPayload;
 class DocumentController extends AbstractController
 {
 
+    /**
+     * Create an Open Api Document
+     *
+     * @param  Request $request
+     * @param  ManagerRegistry $doctrine
+     * @param  Validator $validator
+     * @return JsonResponse
+     */
     #[Route('', name: 'document_create', methods: ['POST'])]
-    public function create(Request $request, ManagerRegistry $doctrine, Validator $validator): Response
+    public function create(Request $request, ManagerRegistry $doctrine, Validator $validator): JsonResponse
     {
         $data = json_decode($request->getContent(), true) ?? [];
 
         $payload = new DocumentPayload($data);
 
+        // verify payload format
         $errors = $validator->getErrors($payload);
 
         if(count($errors)) {
@@ -31,6 +40,7 @@ class DocumentController extends AbstractController
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        // hidrate document
         $document = $payload->getDocument();
 
         $em = $doctrine->getManager();
@@ -45,8 +55,16 @@ class DocumentController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+    /**
+     * Retrieve an Open Api Document by it's id
+     *
+     * @param  string $id the id of the document
+     * @param  OpenApiDocumentRepository $repo
+     * @return JsonResponse
+     */
     #[Route('/{id}', name: 'document_read')]
-    public function read(string $id, OpenApiDocumentRepository $repo){
+    public function read(string $id, OpenApiDocumentRepository $repo) : JsonResponse
+    {
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 

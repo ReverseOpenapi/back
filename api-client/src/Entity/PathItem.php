@@ -99,15 +99,11 @@ class PathItem
         return $this;
     }
 
-    public function addTags(array $tagsName) : self
+    /**
+     * @param  Tag[] $tags
+     */
+    public function addTags(array $tags): self
     {
-        $tags = $this->path->getOpenApiDocument()->getTags();
-
-        $tags = array_filter($tags->toArray(), function($tag) use ($tagsName) {
-
-            return in_array($tag->getName(), $tagsName);
-        });
-
         foreach ($tags as $tag) {
             $this->addTag($tag);
         }

@@ -50,6 +50,11 @@ class DocumentPayload {
     }
 
 
+    /**
+     * Create an Open Api Document Entity and set all his connection
+     *
+     * @return OpenApiDocument
+     */
     public function getDocument() : OpenApiDocument
     {
 
@@ -61,13 +66,19 @@ class DocumentPayload {
             'paths'         => $this->paths,
         ]);
 
+        if ($this->tags && count($this->tags)) $this->setTags();
+
         if ($this->paths && count($this->paths)) $this->setPaths();
 
-        if ($this->tags && count($this->tags)) $this->setTags();
 
         return $this->document;
     }
 
+    /**
+     * Create Paths with his path items (if any) and add them to an Open Api Document
+     *
+     * @return void
+     */
     public function setPaths() : void
     {
 
@@ -86,7 +97,11 @@ class DocumentPayload {
         }
     }
 
+
     /**
+     * Generate an array of Path Items with his parameters, responses and request body (if any)
+     *
+     * @param  array $pathItems
      * @return PathItem[]
      */
     public function getPathItems(array $pathItems) : array
@@ -115,6 +130,12 @@ class DocumentPayload {
                 $pathItemEntity->setRequestBody($requestBody);
             }
 
+            if(isset($pathItem['tags'])) {
+
+                $tags = $this->getPathItemTags($pathItem['tags']);
+                $pathItemEntity->addTags($tags);
+            }
+
             $pathItemEntities[] = $pathItemEntity;
         }
 
@@ -123,6 +144,9 @@ class DocumentPayload {
     }
 
     /**
+     * Create an array of Parameter Entity
+     *
+     * @param  array $parameters
      * @return Parameter[]
      */
     public function getParameters(array $parameters) : array
@@ -137,6 +161,9 @@ class DocumentPayload {
     }
 
     /**
+     * Create an array of Response Entity
+     *
+     * @param  array $responses
      * @return HttpResponse[]
      */
     public function getResponses(array $responses) : array
@@ -150,16 +177,37 @@ class DocumentPayload {
         );
     }
 
+    /**
+     * Return an array of Tags if they exist in the Path Item
+     *
+     * @param  array $tagsName
+     * @return Tag[]
+     */
+    public function getPathItemTags(array $tagsName) : array
+    {
+        return array_filter($this->tags, function($tag) use ($tagsName) {
+
+            return in_array($tag->getName(), $tagsName);
+        });
+    }
+
+    /**
+     * Add payload tags to an Open Api Document
+     *
+     * @return void
+     */
     public function setTags() : void
     {
+        $entityTags = [];
 
         foreach ($this->tags as $key => $tag) {
 
             $tag = new Tag($tag);
+
             $this->document->addTag($tag);
-
+            $entityTags[] = $tag;
         }
+
+        $this->tags = $entityTags;
     }
-
-
 }
