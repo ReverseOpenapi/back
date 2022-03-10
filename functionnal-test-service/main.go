@@ -3,15 +3,23 @@ package main
 import (
 	"github.com/back/functionnal-test-service/connector"
 	"github.com/back/functionnal-test-service/manager"
+	"github.com/joho/godotenv"
+	"log"
+	"os"
 )
 
 func checkEnv() []string {
 	var errs []string
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	return errs
 }
 
 func main() {
-	dsn := connector.NewMysqlDb("root", "root", "rever-openapi")
+	dsn := connector.NewMysqlDb(os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"), os.Getenv("DB_HOSTS"))
 	err := dsn.InitDb()
 	if err != nil {
 		panic(err)
@@ -22,7 +30,7 @@ func main() {
 		panic(err)
 	}
 
-	err = manager.TemplateManager.Manager(1)
+	err = manager.TemplateManager.Manager("8741762d-004a-4747-9867-863e36ad2114")
 	if err != nil {
 		panic(err)
 	}

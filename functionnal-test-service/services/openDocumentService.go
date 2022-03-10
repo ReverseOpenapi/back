@@ -9,7 +9,7 @@ import (
 type openDocumentService struct {}
 
 type openDocumentInterface interface {
-	Get(int) (*model.OpenApiDocument, error)
+	Get(string) (*model.OpenApiDocument, error)
 }
 
 const (
@@ -18,7 +18,7 @@ const (
 
 var OpenDocumentService openDocumentInterface = &openDocumentService{}
 
-func (o openDocumentService) Get(idOpenApi int) (*model.OpenApiDocument, error) {
+func (o openDocumentService) Get(idOpenApi string) (*model.OpenApiDocument, error) {
 	stmt, err := connector.Db.Prepare(getOpenDocument)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (o openDocumentService) Get(idOpenApi int) (*model.OpenApiDocument, error) 
 	defer stmt.Close()
 	var openApi model.OpenApiDocument
 	result := stmt.QueryRow(idOpenApi)
-	if err = result.Scan(&openApi.Id, &openApi.Title, &openApi.Description); err != nil {
+	if err = result.Scan(&openApi.Id, &openApi.Title, &openApi.Description, &openApi.Version); err != nil {
 		fmt.Println("this is the error man: ", err)
 		return nil, err
 	}

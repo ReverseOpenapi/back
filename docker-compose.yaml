@@ -31,7 +31,12 @@ services:
          container_name: reverse-openapi_functionnal-test-service
          build: ./functionnal-test-service
          environment:
-           DB_HOST: reverse-openapi_db
+           #DB_HOST: reverse-openapi_db
+           DB_PASSWORD: fkwyAbBRMqq5R5xt
+           DB_HOSTS: dev-reverseopenapi.clvlxhmupsss.eu-west-3.rds.amazonaws.com
+           DB_USER: admin
+           DB_PORT: 3306
+           DB_NAME: reverse-openapi
          volumes:
              - "./functionnal-test-service:/app"
          links:
@@ -55,6 +60,9 @@ services:
          - db
          ports:
              - "8080:80"
+         environment:
+            PMA_HOST: "dev-reverseopenapi.clvlxhmupsss.eu-west-3.rds.amazonaws.com"
+            PMA_PORT: 3306
     composer_openapi-service:
          container_name: reverse-openapi_composer_openapi-service
          restart: 'no'

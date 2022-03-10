@@ -6,9 +6,7 @@ type PathItem struct {
 	Id int
 	Summary string
 	Description *string
-	HttpMethodId int
-	RequestMethodId int
+	HttpMethod string
 	RequestBodyId sql.NullInt64
-	SecuritySchemeId *int
 	PathId int
 }

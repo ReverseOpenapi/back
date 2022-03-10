@@ -31,7 +31,7 @@ func (p *pathItem) GetByPAth(pathId int) ([]model.PathItem, error) {
 	res := make([]model.PathItem, 0)
 	for rows.Next() {
 		var pi model.PathItem
-		if err = rows.Scan(&pi.Id, &pi.PathId, &pi.HttpMethodId, &pi.RequestBodyId, &pi.SecuritySchemeId, &pi.Summary, &pi.Description); err != nil {
+		if err = rows.Scan(&pi.Id, &pi.PathId, &pi.RequestBodyId, &pi.Summary, &pi.Description, &pi.HttpMethod); err != nil {
 			return nil, err
 		}
 		res = append(res, pi)

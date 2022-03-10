@@ -8,7 +8,7 @@ import (
 
 type pathInterface interface {
 	Get(id int) (*model.Path, error)
-	GetByOpenApiId(openApiId int) (*[]model.Path, error)
+	GetByOpenApiId(openApiId string) (*[]model.Path, error)
 }
 
 type pathDao struct {}
@@ -36,7 +36,7 @@ func (p pathDao) Get(id int) (*model.Path, error) {
 }
 
 
-func (p pathDao) GetByOpenApiId(openApiId int) (*[]model.Path, error) {
+func (p pathDao) GetByOpenApiId(openApiId string) (*[]model.Path, error) {
 	stmt, err := connector.Db.Prepare(getByOpenApi)
 	if err != nil {
 		return nil, err

@@ -2,6 +2,6 @@ package model
 
 type Path struct {
 	Id int
-	OpenApiDocumentId int
+	OpenApiDocumentId string
 	Endpoint string
 }

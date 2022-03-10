@@ -9,7 +9,7 @@ import (
 )
 
 type templateManagerInterface interface {
-	Manager(int) error
+	Manager(string) error
 	GetTemplateManager(item integrationTemplate.GetTemplateInterface, testNumber int) error
 	PostTemplateManager()
 	DeleteTemplateManager()
@@ -41,7 +41,7 @@ func HeaderManager() error {
 	return nil
 }
 
-func (t templateManager) Manager(idOpenApi int) error {
+func (t templateManager) Manager(idOpenApi string) error {
 	openApiService := services.OpenDocumentService
 	pathService := services.PathService
 	f, err := FileCreate("./.export/1/integration_pet_test.go")
@@ -60,6 +60,8 @@ func (t templateManager) Manager(idOpenApi int) error {
 	}
 	paths, err  := pathService.GetByOpenApiId(openApi.Id)
 	if err != nil {
+		fmt.Println("BBBBBB")
+
 		return err
 	}
 	for _, path := range *paths {
@@ -73,12 +75,12 @@ func (t templateManager) Manager(idOpenApi int) error {
 			if err != nil {
 				return err
 			}
-			fmt.Printf("Method id = %v\n ", item.HttpMethodId)
+			/* fmt.Printf("Method id = %v\n ", item.HttpMethodId)
 			httpMethod, err := services.HttpMethodService.GetHttpMethod(item.HttpMethodId)
 			if err != nil {
 				return err
-			}
-			switch httpMethod.Method {
+			}*/
+			switch item.HttpMethod {
 			case "GET":
 				getTemplate := integrationTemplate.NewGetTemplate("localhost", "", path.Endpoint, httpResponse, f)
 				err = t.GetTemplateManager(getTemplate, i)

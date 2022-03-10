@@ -1,8 +1,8 @@
 package model
 
 type OpenApiDocument struct {
-	Id int
-	// User ?
+	Id string
 	Title string
 	Description *string
+	Version string
 }
