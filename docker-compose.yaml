@@ -46,7 +46,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3600:3600'
+      - '3306:3306'
   phpmyadmin:
     container_name: reverse-openapi_phpmyadmin
     image: phpmyadmin/phpmyadmin
