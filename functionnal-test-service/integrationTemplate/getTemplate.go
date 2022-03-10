@@ -13,27 +13,29 @@ type getTemplate struct {
 	statusCode int
 	err string
 	pathItem string
+	f *os.File
 }
 
-type getTemplateInterface interface {
+type GetTemplateInterface interface {
 	SeedMessage()
 	Get() error
 }
 
 var (
-	GetTemplate getTemplateInterface
+	GetTemplate GetTemplateInterface
 )
 
 
-func NewGetTemplate(url, httpResponse, err, pathItem string, statusCode int) getTemplateInterface {
+func NewGetTemplate(url, httpResponse, err, pathItem string, statusCode int, f *os.File) GetTemplateInterface {
 	GetTemplate = &getTemplate{
 		url: url,
 		httpResponse: httpResponse,
 		statusCode: statusCode,
 		err: err,
 		pathItem: pathItem,
+		f: f,
 	}
-	return GetTemplate;
+	return GetTemplate
 }
 
 func (g *getTemplate) SeedMessage() {
@@ -72,6 +74,7 @@ func (g *getTemplate) Get() error {
 	}
 }
 `)
+	fmt.Printf("`%v`\n", path.Clean(g.httpResponse))
 	 tt := struct {
 		Content string
 		StatusCode int
@@ -85,12 +88,8 @@ func (g *getTemplate) Get() error {
 		Err: g.err,
 		PathItem: g.pathItem,
 	}
-	f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	defer f.Close()
-	if err != nil {
-		return err
-	}
-	err = temp.Execute(f, tt)
+	fmt.Println(g.f)
+	err = temp.Execute(g.f, tt)
 	if err != nil {
 		return err
 	}

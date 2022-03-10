@@ -1,19 +1,20 @@
-package model
+package services
 
 import (
 	"errors"
 	"fmt"
 	"github.com/back/functionnal-test-service/connector"
+	"github.com/back/functionnal-test-service/model"
 )
 
 type httpMethodInterface interface {
-	GetHttpMethod(id int) (*HttpMethod, error)
+	GetHttpMethod(id int) (*model.HttpMethod, error)
 }
 
-type httpMethodDao struct {}
+type httpMethodService struct {}
 
 
-var HttpMeth  httpMethodInterface = &httpMethodDao{}
+var HttpMethodService httpMethodInterface = &httpMethodService{}
 
 const (
 	getHttpMethodDao = "SELECT * FROM http_method WHERE id = ?;"
@@ -21,13 +22,13 @@ const (
 
 )
 
-func (h *httpMethodDao) GetHttpMethod(id int) (*HttpMethod, error) {
+func (h *httpMethodService) GetHttpMethod(id int) (*model.HttpMethod, error) {
 	stmt, err := connector.Db.Prepare(getHttpMethodDao)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
-	var hm HttpMethod
+	var hm model.HttpMethod
 	result := stmt.QueryRow(id)
 	if err = result.Scan(&hm.Id, &hm.Method); err != nil {
 		fmt.Println("this is the error man: ", err)
@@ -37,7 +38,7 @@ func (h *httpMethodDao) GetHttpMethod(id int) (*HttpMethod, error) {
 }
 
 
-func (h *httpMethodDao) GetHttpMethods(id int) (*[]HttpMethod, error) {
+func (h *httpMethodService) GetHttpMethods(id int) (*[]model.HttpMethod, error) {
 	stmt, err := connector.Db.Prepare(getHttpMethodsDao)
 	if err != nil {
 		return nil, err
@@ -48,9 +49,9 @@ func (h *httpMethodDao) GetHttpMethods(id int) (*[]HttpMethod, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	res := make([]HttpMethod, 0)
+	res := make([]model.HttpMethod, 0)
 	for rows.Next() {
-		var hm HttpMethod
+		var hm model.HttpMethod
 		if err = rows.Scan(&hm.Id, &hm.Method); err != nil {
 			return nil, err
 		}
@@ -61,4 +62,3 @@ func (h *httpMethodDao) GetHttpMethods(id int) (*[]HttpMethod, error) {
 	}
 	return &res, nil
 }
-

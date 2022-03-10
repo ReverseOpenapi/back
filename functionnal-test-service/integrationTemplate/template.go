@@ -20,12 +20,14 @@ var IntegrationTemplate integrationTestInterface
 
 type integrationTemplate struct {
 	url string
+	f *os.File
 }
 
 
-func NewTemplate(url string) integrationTestInterface {
+func NewTemplate(url string, f *os.File) integrationTestInterface {
 	IntegrationTemplate = &integrationTemplate{
 		url: url,
+		f: f,
 	}
 	return IntegrationTemplate
 }
@@ -46,13 +48,13 @@ func (t *integrationTemplate) Header() error {
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	/*f, err := os.OpenFile("./.export/1/integration_pet_test.go", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
-	}
+	}*/
 	type header struct {}
 	h := header{}
-	err = temp.Execute(f, h)
+	err = temp.Execute(t.f, h)
 	return nil
 }
 

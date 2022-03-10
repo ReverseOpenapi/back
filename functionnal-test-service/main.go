@@ -23,6 +23,9 @@ func main() {
 	}
 
 	err = manager.TemplateManager.Manager(1)
+	if err != nil {
+		panic(err)
+	}
 	/* g := model.HttpMeth
 	o, err := g.GetHttpMethod(3)
 	if err != nil {

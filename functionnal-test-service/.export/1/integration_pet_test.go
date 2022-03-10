@@ -37,12 +37,12 @@ func TestGetOne(t *testing.T) {
 		statusCode int
 		errMessage string
 	} {
-		content: `["{ \"id\": 0", "\"name\": \"doggie\"", "\"status\": \"available\" }"]`,
-		statusCode: 200,
+		content: `[]`,
+		statusCode: 400,
 		errMessage: "",
 	}
 
-	resp, err := http.Get("http://localhost:8000/pet")
+	resp, err := http.Get("http://localhost:8000/pet/{id}")
 	if err != nil {
 		t.Errorf("Server unavailable")	
 	}
