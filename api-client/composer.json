@@ -20,6 +20,7 @@
         "ramsey/uuid": "^4.2",
         "ramsey/uuid-doctrine": "^1.8",
         "sensio/framework-extra-bundle": "^6.1",
+        "sentry/sentry-symfony": "^4.2",
         "symfony/amazon-sqs-messenger": "5.4.*",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "5.4.*",
