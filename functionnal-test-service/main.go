@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/back/functionnal-test-service/connector"
 	"github.com/back/functionnal-test-service/manager"
+	"github.com/back/functionnal-test-service/utils/zip"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -68,6 +69,10 @@ func main() {
 		err = manager.TemplateManager.Manager(di.DocumentId)
 		if err != nil {
 			panic(err)
+		}
+		err := zip.ZipSource("./.export/" + di.DocumentId, "./.export/" + di.DocumentId + ".zip")
+		if err != nil {
+			log.Println(err)
 		}
 	}
 }
