@@ -38,6 +38,9 @@
     "brick/math": {
         "version": "0.9.3"
     },
+    "clue/stream-filter": {
+        "version": "v1.6.0"
+    },
     "composer/pcre": {
         "version": "1.0.1"
     },
@@ -187,6 +190,12 @@
     "guzzlehttp/psr7": {
         "version": "2.1.0"
     },
+    "http-interop/http-factory-guzzle": {
+        "version": "1.2.0"
+    },
+    "jean85/pretty-package-versions": {
+        "version": "2.0.5"
+    },
     "knplabs/gaufrette": {
         "version": "v0.10.0"
     },
@@ -232,6 +241,24 @@
     },
     "php-cs-fixer/diff": {
         "version": "v2.0.2"
+    },
+    "php-http/client-common": {
+        "version": "2.5.0"
+    },
+    "php-http/discovery": {
+        "version": "1.14.1"
+    },
+    "php-http/httplug": {
+        "version": "2.3.0"
+    },
+    "php-http/message": {
+        "version": "1.13.0"
+    },
+    "php-http/message-factory": {
+        "version": "v1.0.2"
+    },
+    "php-http/promise": {
+        "version": "1.1.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -385,6 +412,24 @@
     "seld/jsonlint": {
         "version": "1.8.3"
     },
+    "sentry/sdk": {
+        "version": "3.1.1"
+    },
+    "sentry/sentry": {
+        "version": "3.3.7"
+    },
+    "sentry/sentry-symfony": {
+        "version": "4.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "9746f0823302d7980e5273ef7a69ef3f5ac80914"
+        },
+        "files": [
+            "config/packages/sentry.yaml"
+        ]
+    },
     "symfony/amazon-sqs-messenger": {
         "version": "v6.0.3"
     },
@@ -524,6 +569,9 @@
     "symfony/options-resolver": {
         "version": "v6.0.0"
     },
+    "symfony/password-hasher": {
+        "version": "v6.0.3"
+    },
     "symfony/phpunit-bridge": {
         "version": "6.0",
         "recipe": {
@@ -551,6 +599,9 @@
     "symfony/polyfill-php81": {
         "version": "v1.24.0"
     },
+    "symfony/polyfill-uuid": {
+        "version": "v1.25.0"
+    },
     "symfony/process": {
         "version": "v6.0.2"
     },
@@ -562,6 +613,9 @@
     },
     "symfony/proxy-manager-bridge": {
         "version": "v6.0.2"
+    },
+    "symfony/psr-http-message-bridge": {
+        "version": "v2.1.2"
     },
     "symfony/routing": {
         "version": "6.0",
@@ -578,6 +632,9 @@
     },
     "symfony/runtime": {
         "version": "v6.0.0"
+    },
+    "symfony/security-core": {
+        "version": "v6.0.5"
     },
     "symfony/serializer": {
         "version": "v6.0.3"
