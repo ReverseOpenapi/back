@@ -1,0 +1,8 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: Reverse Open API Documentation
+      description: This is the documentation of the Reverse Open API Client
+      version: 1.0.0
+  areas:
+    path_patterns: [^/api(?!/doc$)]
