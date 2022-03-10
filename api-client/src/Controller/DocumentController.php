@@ -280,6 +280,7 @@ class DocumentController extends AbstractController
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
         $filename = $id . '.json';
+        // dd($fs->listKeys());
 
         if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
