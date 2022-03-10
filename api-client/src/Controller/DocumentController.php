@@ -13,13 +13,15 @@ use App\Model\DocumentPayload;
 use OpenApi\Attributes as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Route\Document\Create;
+use Gaufrette\Filesystem;
+use Symfony\Component\HttpFoundation\HeaderUtils;
+
 
 
 #[Route('/api/document')]
 #[OA\Tag(name: "Document")]
 class DocumentController extends AbstractController
 {
-
     /**
      * Create an Open Api Document
      *
@@ -268,6 +270,28 @@ class DocumentController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+
+    #[Route('/download/{id}', name:'document_download', methods: ['GET'])]
+    public function retrieve(FileSystem $fs, string $id) {
+
+        if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
+
+        $filename = $id . '.json';
+
+        if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+
+        $file = $fs->get($filename);
+        $response = new Response($file->getContent());
+
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename
+        );
+        
+        $response->headers->set('Content-Disposition', $disposition);
+        return $response;
+    }
+
     /**
      * Retrieve an Open Api Document by it's id
      *
@@ -290,4 +314,7 @@ class DocumentController extends AbstractController
             'data'      => $document->toArray()
         ], Response::HTTP_OK);
     }
+
+
+
 }
