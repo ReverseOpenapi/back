@@ -71,6 +71,18 @@ class PathItem
         return $this;
     }
 
+    /**
+     * @param  HttpResponse[] $responses
+     */
+    public function addResponses(array $responses): self
+    {
+        foreach ($responses as $response) {
+            $this->addResponse($response);
+        }
+
+        return $this;
+    }
+
     public function setRequestBody(?RequestBody $requestBody): self
     {
         $this->requestBody = $requestBody;
@@ -90,7 +102,7 @@ class PathItem
     public function addTags(array $tagsName) : self
     {
         $tags = $this->path->getOpenApiDocument()->getTags();
-        
+
         $tags = array_filter($tags->toArray(), function($tag) use ($tagsName) {
 
             return in_array($tag->getName(), $tagsName);
@@ -108,6 +120,18 @@ class PathItem
         if (!$this->parameters->contains($parameter)) {
             $this->parameters[] = $parameter;
             $parameter->setPathItem($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param  Parameter[] $parameters
+     */
+    public function addParameters(array $parameters): self
+    {
+        foreach ($parameters as $parameter) {
+            $this->addParameter($parameter);
         }
 
         return $this;

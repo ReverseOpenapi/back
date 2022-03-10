@@ -70,6 +70,18 @@ class Path
         return $this;
     }
 
+    /**
+     * @param  PathItem[] $pathItems
+     */
+    public function addPathItems(array $pathItems): self
+    {
+        foreach ($pathItems as $pathItem) {
+            $this->addPathItem($pathItem);
+        }
+
+        return $this;
+    }
+
     public function toArray() {
 
         return [
