@@ -1,0 +1,55 @@
+name: OpenAPI Service tests
+on: [push]
+jobs:
+  tests:
+    name: OpenAPI service tests
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['8.1']
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+    env:
+      working-directory: ./openAPI-service
+    steps:
+      # —— Setup Github actions —————————————————————————————————————————————
+      - name: Checkout
+        uses: actions/checkout@v2
+      # —— Setup PHP ————————————————————————————————————————————————————————
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, intl
+          coverage: none
+      # —— Composer —————————————————————————————————————————————————————————
+      - name: Get composer cache directory
+        working-directory: ${{ env.working-directory }}
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Composer dependencies
+        working-directory: ${{ env.working-directory }}
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+      # —— Setup database ———————————————————————————————————————————————————
+      - name: Prepare database
+        working-directory: ${{ env.working-directory }}
+        run: |
+          php bin/console doctrine:database:create --env=test
+          php bin/console doctrine:schema:update --force --env=test
+          php bin/console doctrine:fixtures:load -n --group=test --env=test
+      # —— Run tests ————————————————————————————————————————————————————————————
+      - name: Run all tests
+        working-directory: ${{ env.working-directory }}
+        run: php bin/phpunit

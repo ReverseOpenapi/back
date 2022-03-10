@@ -4,6 +4,14 @@
 
 ' This model is satisfying 3NF (https://en.wikipedia.org/wiki/Database_normalization)
 
+' Store schemas created by our modeling tool
+' https://swagger.io/specification/#schema-object
+class Schema {
+    {field} id: Int
+    {field} user: ???
+    {field} content: json
+}
+
 ' Root of the OpenAPI document created by the user
 ' https://swagger.io/specification/#openapi-object
 class OpenApiDocument {
@@ -90,6 +98,11 @@ class Parameter {
     {field} name: String
     {field} description: ?String
     {field} required: Boolean
+}
+
+' https://swagger.io/specification/#parameter-object -> refers to "in" field name
+class ParameterLocation {
+    {field} id: Int
     {field} location: String
 }
 

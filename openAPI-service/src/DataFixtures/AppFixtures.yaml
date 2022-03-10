@@ -1,0 +1,100 @@
+App\Entity\OpenApiDocument:
+  document:
+    title: 'Petstore'
+    paths: ['@pet', '@pet_item']
+    tags: ['@pet_tag']
+    version: '1.0.0'
+
+App\Entity\Path:
+  pet:
+    endpoint: '/pet'
+    pathItems: ['@pet_post']
+  pet_item:
+    endpoint: '/pet/{id}'
+    pathItems: ['@pet_get', '@pet_delete']
+
+App\Entity\PathItem:
+  pet_post:
+    httpMethod: 'POST'
+    tags: ['@pet_tag']
+    summary: 'Add a new pet to the store'
+    responses: ['@pet_post_405']
+    requestBody: '@pet_post_body'
+    parameters: ['@pet_get_id']
+  pet_get:
+    httpMethod: 'GET'
+    tags: ['@pet_tag']
+    summary: 'Find pet by id'
+    responses: ['@pet_get_200', '@pet_get_400', '@pet_get_404']
+    parameters: ['@pet_get_id']
+  pet_delete:
+    httpMethod: 'DELETE'
+    tags: ['@pet_tag']
+    summary: 'Deletes a pet'
+    responses: ['@pet_delete_400', '@pet_delete_404']
+    parameters: ['@pet_delete_id']
+
+App\Entity\HttpResponse:
+  pet_post_405:
+    httpStatusCode: 405
+    description: 'Invalid input'
+  pet_get_200:
+    httpStatusCode: 200
+    description: 'Successful operation'
+    content:
+      type: 'object'
+      properties:
+        id:
+          example: 0
+        name:
+          example: 'doggie'
+        status:
+          example: 'available'
+
+  pet_get_400:
+    httpStatusCode: 400
+    description: 'Invalid ID supplied'
+  pet_get_404:
+    httpStatusCode: 404
+    description: 'Pet not found'
+  pet_delete_400:
+    httpStatusCode: 400
+    description: 'Invalid ID supplied'
+  pet_delete_404:
+    httpStatusCode: 404
+    description: 'Pet not found'
+
+App\Entity\Tag:
+  pet_tag:
+    name: 'Pet'
+    description: 'Everythings about Pets'
+
+App\Entity\Parameter:
+  pet_get_id:
+    name: 'id'
+    location: 'path'
+    description: 'ID of pet to return'
+    required: true
+    parameterSchema:
+      type: 'integer'
+  pet_delete_id:
+    name: 'id'
+    location: 'path'
+    description: 'ID of pet to delete'
+    required: true
+    parameterSchema:
+      type: 'integer'
+
+App\Entity\RequestBody:
+  pet_post_body:
+    content:
+      type: 'object'
+      properties:
+        id:
+          example: 0
+        name:
+          example: 'doggie'
+        status:
+          example: 'available'
+    required: true
+    description: 'Pet object that needs to be added to the store'

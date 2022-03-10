@@ -1,1 +1,10 @@
 var/
+
+#  Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+
+# macs
+.DS_Store
