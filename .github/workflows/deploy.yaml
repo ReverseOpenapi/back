@@ -1,5 +1,7 @@
 name: Deploy
-on: [api-client/feature/post-document]
+on:
+  push:
+    branches: ['api-client/feature/post-document']
 jobs:
   build:
     name: Build
