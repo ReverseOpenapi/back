@@ -1,4 +1,10 @@
 {
+    "async-aws/core": {
+        "version": "1.14.0"
+    },
+    "async-aws/sqs": {
+        "version": "1.7.0"
+    },
     "aws/aws-crt-php": {
         "version": "v1.0.2"
     },
@@ -202,6 +208,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "symfony/amazon-sqs-messenger": {
+        "version": "v5.4.3"
     },
     "symfony/amqp-messenger": {
         "version": "v5.4.3"
