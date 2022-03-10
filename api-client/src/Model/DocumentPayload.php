@@ -13,26 +13,61 @@ use App\Entity\{
     HttpResponse,
     RequestBody
 };
+use OpenApi\Attributes as OA;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 class DocumentPayload {
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
-    private $title;
+    #[Groups(['payload'])]
+    #[OA\Property(
+        title: 'title',
+        type: 'string',
+        description: 'The title of the Open API document.',
+    )]
+    public $title;
 
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
-    private $description;
+    #[Groups(['payload'])]
+    #[OA\Property(
+        title: 'description',
+        type: 'string',
+        description: 'The description of the Open API document.',
+    )]
+    public $description;
 
+    #[Groups(['payload'])]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
-    private $version;
+    #[OA\Property(
+        title: 'version',
+        type: 'string',
+        description: 'The Open API version of the Open API document.',
+    )]
+    public $version;
 
     #[Tags]
-    private $tags;
+    #[Groups(['payload'])]
+    #[OA\Property(
+        title: 'tags',
+        type: 'array',
+        description: 'Tags of the Open API document.',
+        items: new OA\Items()
+    )]
+    public array|null $tags;
 
     #[Paths]
-    private $paths;
+    #[OA\Property(
+        title: 'paths',
+        type: 'array',
+        description: 'Paths of the Open API document.',
+        items: new OA\Items()
+    )]
+    #[Groups(['payload'])]
+    public $paths;
 
     private OpenApiDocument $document;
 
