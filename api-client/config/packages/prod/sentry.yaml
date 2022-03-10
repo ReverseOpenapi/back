@@ -1,0 +1,25 @@
+sentry:
+  dsn: '%env(SENTRY_DSN)%'
+  register_error_listener: false
+  options:
+    attach_stacktrace: true
+    default_integrations: true
+    max_breadcrumbs: 50
+    send_default_pii: true
+    traces_sample_rate: 0.2
+    max_value_length: 2048
+    enable_compression: true
+    environment: 'api_client@%kernel.environment%'
+    error_types: 'E_ALL & ~E_NOTICE'
+    in_app_exclude:
+      - '%kernel.build_dir%'
+      - '%kernel.cache_dir%'
+      - '%kernel.project_dir%/vendor'
+  tracing:
+    enabled: true
+    dbal:
+      enabled: true
+    cache:
+      enabled: true
+    twig:
+      enabled: true
