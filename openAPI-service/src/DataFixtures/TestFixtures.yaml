@@ -1,0 +1,73 @@
+App\Entity\OpenApiDocument:
+  document:
+    title: 'Pet Store'
+    description: "This is a Pet Store"
+    version: '1.0.0'
+    paths: ['@pet_item']
+    tags: ['@pet_tag']
+
+App\Entity\Path:
+  pet_item:
+    endpoint: '/pet/{id}'
+    pathItems: ['@pet_get', '@pet_put']
+    parameters: ['@pet_get_id']
+
+App\Entity\PathItem:
+  pet_put:
+    httpMethod: 'PUT'
+    tags: ['@pet_tag']
+    summary: 'Update a pet'
+    responses: ['@pet_post_405']
+    requestBody: '@pet_put_body'
+  pet_get:
+    httpMethod: 'GET'
+    tags: ['@pet_tag']
+    summary: 'Find pet by id'
+    description: 'Find a pet in the Pet Store'
+    responses: ['@pet_get_200']
+    parameters: ['@pet_get_id']
+
+App\Entity\HttpResponse:
+  pet_post_405:
+    httpStatusCode: 405
+    description: 'Invalid input'
+  pet_get_200:
+    httpStatusCode: 200
+    description: 'Successful operation'
+    content:
+      type: 'object'
+      properties:
+        id:
+          example: 0
+        name:
+          example: 'doggie'
+        status:
+          example: 'available'
+
+App\Entity\Tag:
+  pet_tag:
+    name: 'pet'
+    description: 'Everything about your Pets'
+
+App\Entity\Parameter:
+  pet_get_id:
+    name: 'id'
+    location: 'path'
+    description: 'ID of pet to return'
+    required: true
+    parameterSchema:
+      type: 'integer'
+
+App\Entity\RequestBody:
+  pet_put_body:
+    content:
+      type: 'object'
+      properties:
+        id:
+          example: 0
+        name:
+          example: 'doggie'
+        status:
+          example: 'available'
+    required: true
+    description: 'Pet object that needs to be added to the store'

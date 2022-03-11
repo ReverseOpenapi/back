@@ -33,6 +33,7 @@ class PathItem {
     {field} id: Int
     {field} summary: ?String
     {field} description: ?String
+    {field} httpMethod : String
 }
 
 ' https://swagger.io/specification/#security-scheme-object
@@ -115,17 +116,10 @@ class HttpResponse {
     {field} content: ?Json
 }
 
-class HttpMethod {
-    {field} id: Int
-    {field} method: String
-}
-
 OpenApiDocument "1..n" -- "1,1" Path /' OpenApiDocument has one or many Path, Path has one OpenAPIDocument '/
 Path "0..n" -- "1,1" Parameter /' Path has zero or many Parameter, Parameter has one Path '/
 PathItem "1..n" -- "1,1" HttpResponse /' PathItem has one or many HttpResponse, HttpResponse has one Pathitem '/
-PathItem "1,1" -- "0..n" HttpMethod /' PathItem has one HttpMethod, HttpMethod has zero or many PathItem '/
 Path "1..n" -- "1,1" PathItem /' Path has zero or many PathItem, PathItem has one Path '/
-ParameterLocation "0..n" -- "1,1" Parameter /' ParameterLocation has zero or many Parameter, Parameter has one ParameterLocation '/
 RequestBody "1,1" -- "0,1" PathItem /' RequestBody has one PathItem, PathItem has zero or one PathItem '/
 Tag "1,1" -- "0..n" OpenApiDocument /' Tag has one OpenApiDocument, OpenApiDocument has zero or many Tag '/
 Tag "1..n" -- "0..n" PathItem /' Tag has one or many PathItem, PathItem has zero or many PathItem '/

@@ -1,0 +1,22 @@
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    excludePaths:
+        - %rootDir%/../../../bin/*
+        - %rootDir%/../../../var/*
+        - %rootDir%/../../../public/*
+        - %rootDir%/../../../config/*
+        - %rootDir%/../../../vendor/*
+        - %rootDir%/../../../php_cs.php
+
+    checkGenericClassInNonGenericObjectType: false
+
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    scanDirectories:
+        - var/cache/dev/Symfony/Config

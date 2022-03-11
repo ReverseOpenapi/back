@@ -1,82 +1,83 @@
 version: '3'
 services:
-    api-client:
-         container_name: reverse-openapi_api-client
-         build: ./api-client
-         ports:
-             - "80:80"
-         volumes:
-             - ./api-client:/var/www/html
-         links:
-             - db:db
-    openapi-service:
-        container_name: reverse-openapi_openapi-service
-        build: ./openAPI-service
-        volumes:
-            - ./openAPI-service:/var/www/html
-        links:
-             - db:db
-        ports:
-            - "81:80"
-    sql-fixtures-service:
-        container_name: reverse-openapi_sql-fixtures-service
-        build: ./sql-fixtures-service
-        volumes:
-            - ./sql-fixtures-service:/var/www/html
-        links:
-            - db:db
-        ports:
-            - "82:80"
-    functionnal-test-service:
-         container_name: reverse-openapi_functionnal-test-service
-         build: ./functionnal-test-service
-         volumes:
-             - "./functionnal-test-service:/app"
-         links:
-             - db:db
-         ports:
-             - "83:8080"
-    db:
-         container_name: reverse-openapi_db
-         platform: linux/amd64
-         image: mysql
-         command: ["--default-authentication-plugin=mysql_native_password"]
-         volumes:
-                 - "./var/db/:/var/lib/mysql"
-         environment:
-             MYSQL_ROOT_PASSWORD: root
-         ports:
-             - "3600:3600"
-    phpmyadmin:
-         container_name: reverse-openapi_phpmyadmin
-         image: phpmyadmin/phpmyadmin
-         depends_on:
-         - db
-         ports:
-             - "8080:80"
-    composer_openapi-service:
-         container_name: reverse-openapi_composer_openapi-service
-         restart: 'no'
-         image: composer
-         command: ["composer", "install", "--ignore-platform-reqs"]
-         volumes:
-             - ./openAPI-service:/app
-    composer_sql-fixtures-service:
-         container_name: reverse-openapi_composer_sql-fixtures-service
-         restart: 'no'
-         image: composer
-         command: ["composer", "install", "--ignore-platform-reqs"]
-         volumes:
-             - ./sql-fixtures-service:/app
-    composer_api-client:
-         container_name: reverse-openapi_composer_api-client
-         restart: 'no'
-         image: composer
-         command: ["composer", "install", "--ignore-platform-reqs"]
-         volumes:
-             - ./api-client:/app
-    gcp-pubsub-emulator:
-        container_name: reverse-openapi_gcp-pubsub-emulator
-        build: ./gcp-pubsub-emulator
-        ports:
-            - "8085:8085"
+  api-client:
+    container_name: reverse-openapi_api-client
+    build: ./api-client
+    ports:
+      - '85:8000'
+    volumes:
+      - ./api-client:/var/www/html
+    links:
+      - db:db
+  openapi-service:
+    container_name: reverse-openapi_openapi-service
+    build: ./openAPI-service
+    restart: always
+    volumes:
+      - ./openAPI-service:/var/www/html
+    links:
+      - db:db
+    ports:
+      - '81:80'
+  sql-fixtures-service:
+    container_name: reverse-openapi_sql-fixtures-service
+    build: ./sql-fixtures-service
+    volumes:
+      - ./sql-fixtures-service:/var/www/html
+    links:
+      - db:db
+    ports:
+      - '82:80'
+  functionnal-test-service:
+    container_name: reverse-openapi_functionnal-test-service
+    build: ./functionnal-test-service
+    volumes:
+      - './functionnal-test-service:/app'
+    links:
+      - db:db
+    ports:
+      - '83:8080'
+  db:
+    container_name: reverse-openapi_db
+    platform: linux/amd64
+    image: mysql
+    command: ['--default-authentication-plugin=mysql_native_password']
+    volumes:
+      - './var/db/:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3600:3600'
+  phpmyadmin:
+    container_name: reverse-openapi_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - '8080:80'
+  composer_openapi-service:
+    container_name: reverse-openapi_composer_openapi-service
+    restart: 'no'
+    image: composer
+    command: ['composer', 'install']
+    volumes:
+      - ./openAPI-service:/app
+  composer_sql-fixtures-service:
+    container_name: reverse-openapi_composer_sql-fixtures-service
+    restart: 'no'
+    image: composer
+    command: ['composer', 'install']
+    volumes:
+      - ./sql-fixtures-service:/app
+  composer_api-client:
+    container_name: reverse-openapi_composer_api-client
+    restart: 'no'
+    image: composer
+    command: ['composer', 'install']
+    volumes:
+      - ./api-client:/app
+  gcp-pubsub-emulator:
+    container_name: reverse-openapi_gcp-pubsub-emulator
+    build: ./gcp-pubsub-emulator
+    ports:
+      - '8085:8085'
