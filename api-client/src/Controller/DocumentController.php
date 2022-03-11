@@ -275,7 +275,7 @@ class DocumentController extends AbstractController
 
 
     #[Route('/download/{id}', name:'document_download', methods: ['GET'])]
-    public function retrieve(FileSystem $fs, string $id) : Response
+    public function retrieve(string $id, FileSystem $fs) : Response
     {
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
