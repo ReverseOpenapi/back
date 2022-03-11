@@ -54,9 +54,6 @@ services:
          - db
          ports:
              - "8080:80"
-         environment:
-            PMA_HOST: "dev-reverseopenapi.clvlxhmupsss.eu-west-3.rds.amazonaws.com"
-            PMA_PORT: 3306
     composer_openapi-service:
          container_name: reverse-openapi_composer_openapi-service
          restart: 'no'
