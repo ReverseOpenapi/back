@@ -22,11 +22,11 @@ class TestController extends AbstractController
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
-        $filename =  'functional-test/' . $id . '.json';
+        $filename =  $id . '.zip';
 
-        if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+        if (!$fs->has('functional-test/' . $filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
-        $file = $fs->get($filename);
+        $file = $fs->get('functional-test/' . $filename);
         $response = new Response($file->getContent());
 
         $disposition = HeaderUtils::makeDisposition(

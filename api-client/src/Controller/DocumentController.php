@@ -15,7 +15,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Route\Document\Create;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\HeaderUtils;
-use App\Messenger\Message\CreateOpenApiDocument;
+use App\Messenger\Message\{CreateOpenApiDocument, CreateOpenApiTests};
 use Symfony\Component\Messenger\MessageBusInterface;
 
 
@@ -348,6 +348,7 @@ class DocumentController extends AbstractController
         $em->flush();
 
         $bus->dispatch(new CreateOpenApiDocument($document->getId()));
+        $bus->dispatch(new CreateOpenApiTests($document->getId()));
 
         return new JsonResponse([
             'success'    => true,
@@ -420,11 +421,13 @@ class DocumentController extends AbstractController
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
-        $filename =  'document/' . $id . '.json';
+        $filename = $id . '.json';
 
-        if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+        dd($fs->listKeys());
 
-        $file = $fs->get($filename);
+        if (!$fs->has('document/' . $filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+
+        $file = $fs->get('document/' . $filename);
         $response = new Response($file->getContent());
 
         $disposition = HeaderUtils::makeDisposition(

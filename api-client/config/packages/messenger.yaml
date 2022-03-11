@@ -3,18 +3,32 @@ framework:
     serializer:
       default_serializer: App\Messenger\ExternalJsonMessageSerializer
     transports:
-      sqs:
-        dsn: '%env(SQS_TRANSPORT_DSN)%'
+      sqs_document:
+        dsn: '%env(SQS_DOCUMENT_TRANSPORT_DSN)%'
         options:
           auto_setup: false
-        failure_transport: sqs_dead_letter_queue
+        failure_transport: sqs_document_dead_letter_queue
         retry_strategy:
           max_retries: 0
 
-      sqs_dead_letter_queue:
-        dsn: '%env(SQS_DLQ_TRANSPORT_DSN)%'
+      sqs_document_dead_letter_queue:
+        dsn: '%env(SQS_DOCUMENT_DLQ_TRANSPORT_DSN)%'
+        options:
+          auto_setup: false
+
+      sqs_tests:
+        dsn: '%env(SQS_TESTS_TRANSPORT_DSN)%'
+        options:
+          auto_setup: false
+        failure_transport: sqs_tests_dead_letter_queue
+        retry_strategy:
+          max_retries: 0
+
+      sqs_tests_dead_letter_queue:
+        dsn: '%env(SQS_TESTS_DLQ_TRANSPORT_DSN)%'
         options:
           auto_setup: false
 
     routing:
-      'App\Messenger\Message\CreateOpenApiDocument': sqs
+      'App\Messenger\Message\CreateOpenApiDocument': sqs_document
+      'App\Messenger\Message\CreateOpenApiTests': sqs_tests

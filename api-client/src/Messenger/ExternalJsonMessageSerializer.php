@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Messenger;
-use App\Messenger\Message\CreateOpenApiDocument;
+use App\Messenger\Message\{CreateOpenApiDocument, CreateOpenApiTests};
 use Exception;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -24,7 +24,10 @@ class ExternalJsonMessageSerializer implements SerializerInterface
     {
         $message = $envelope->getMessage();
 
-        if ($message instanceof CreateOpenApiDocument) {
+        if (
+            $message instanceof CreateOpenApiDocument ||
+            $message instanceof CreateOpenApiTests
+        ) {
             $data = ['documentId' => $message->getDocumentId()];
         } else {
             throw new Exception('Unsupported message class');
