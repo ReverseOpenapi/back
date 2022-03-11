@@ -8,7 +8,7 @@ package main
 	"github.com/stretchr/testify/assert"
 )
 
-func seedElementgbaiC() (interface{}, error) {
+func seedElementuWJRG() (interface{}, error) {
 	return "", nil
 	resp, err := http.Get("localhost")
 

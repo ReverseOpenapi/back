@@ -2,6 +2,7 @@ package connector
 
 import (
 	"errors"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
@@ -22,6 +23,7 @@ func ReceiveMessage() (*sqs.ReceiveMessageOutput, error) {
 	sess := GetSession()
 	svc := sqs.New(sess)
 	qURL := os.Getenv("SQS_QUEUE")
+	fmt.Println(qURL)
 	result, err := svc.ReceiveMessage(&sqs.ReceiveMessageInput{
 		AttributeNames: []*string{
 			aws.String(sqs.MessageSystemAttributeNameSentTimestamp),
@@ -43,3 +45,15 @@ func ReceiveMessage() (*sqs.ReceiveMessageOutput, error) {
 	return result, nil
 }
 
+func DeleteMessage(svc *sqs.SQS, message *sqs.Message) error {
+	delParams := sqs.DeleteMessageInput{
+		QueueUrl: aws.String(os.Getenv("SQS_QUEUE")),
+	}
+	delParams.ReceiptHandle = message.ReceiptHandle
+	_, err := svc.DeleteMessage(&delParams)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Message delete with success")
+	return nil
+}
