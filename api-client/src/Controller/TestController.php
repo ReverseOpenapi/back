@@ -15,12 +15,13 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 class TestController extends AbstractController
 {
 
-    #[Route('/download/{id}', name:'document_test', methods: ['GET'])]
-    public function retrieve(FileSystem $fs, string $id) {
+    #[Route('/download/{id}', name:'functional_tests_download', methods: ['GET'])]
+    public function retrieve(FileSystem $fs, string $id) : Response
+    {
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
-        $filename = $id . '.json';
+        $filename =  'functional-test/' . $id . '.json';
 
         if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
@@ -31,7 +32,8 @@ class TestController extends AbstractController
             HeaderUtils::DISPOSITION_ATTACHMENT,
             $filename
         );
-        
+
+
         $response->headers->set('Content-Disposition', $disposition);
         return $response;
     }

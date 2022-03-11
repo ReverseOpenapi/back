@@ -275,15 +275,16 @@ class DocumentController extends AbstractController
 
 
     #[Route('/download/{id}', name:'document_download', methods: ['GET'])]
-    public function retrieve(FileSystem $fs, string $id) {
+    public function retrieve(FileSystem $fs, string $id) : Response
+    {
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
-        $filename =  $id . '.json';
+        $filename =  'document/' . $id . '.json';
 
-        if (!$fs->has('document/'.$filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+        if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
-        $file = $fs->get('document/'.$filename);
+        $file = $fs->get($filename);
         $response = new Response($file->getContent());
 
         $disposition = HeaderUtils::makeDisposition(
