@@ -423,8 +423,6 @@ class DocumentController extends AbstractController
 
         $filename = $id . '.json';
 
-        dd($fs->listKeys());
-
         if (!$fs->has('document/' . $filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
         $file = $fs->get('document/' . $filename);
