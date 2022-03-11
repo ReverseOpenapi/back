@@ -18,6 +18,7 @@ class OpenApiDocument {
     {field} id: Int
     {field} user:  ???
     {field} title: String
+    {field} version: String
     {field} description: ?String
 }
 
@@ -98,6 +99,7 @@ class Parameter {
     {field} name: String
     {field} description: ?String
     {field} required: Boolean
+    {field} parameterSchema: Json
 }
 
 ' https://swagger.io/specification/#parameter-object -> refers to "in" field name
@@ -110,13 +112,12 @@ class ParameterLocation {
 class HttpResponse {
     {field} id: Int
     {field} httpStatusCode: Int
-    {field} description: ?String
+    {field} description: String
     {field} content: ?Json
 }
 
 OpenApiDocument "1..n" -- "1,1" Path /' OpenApiDocument has one or many Path, Path has one OpenAPIDocument '/
 Path "0..n" -- "1,1" Parameter /' Path has zero or many Parameter, Parameter has one Path '/
-PathItem "0..n" -- "1,1" Parameter /' PathItem has zero or many Parameter, Parameter has one PathItem '/
 PathItem "1..n" -- "1,1" HttpResponse /' PathItem has one or many HttpResponse, HttpResponse has one Pathitem '/
 Path "1..n" -- "1,1" PathItem /' Path has zero or many PathItem, PathItem has one Path '/
 RequestBody "1,1" -- "0,1" PathItem /' RequestBody has one PathItem, PathItem has zero or one PathItem '/
@@ -127,6 +128,7 @@ OAuthFlow "1,1" -- "0..n" SecurityScheme /' OAuthFlow has one SecurityScheme, Se
 OAuthFlowType "0..n" -- "1,1" OAuthFlow /' OAuthFlowType has zero or many OAuthFlow, OAuthFlow has one OAuthFlowType '/
 OAuthScope "1,1" -- "1..n" OAuthFlow /' OAuthScope has one OAuthFlow, OAuthFlow has one or many OAuthScope '/
 SecurityScheme "0..n" -- "1,0" PathItem /' SecurityScheme has zero or many PathItem, PathItem has one or zero SecurityScheme '/
-SecurityScheme "1,1" -- "0..n" SecurityType /' SecurityScheme has one SecurityType, SecurityType has zero or many SecurityType '/
+SecurityScheme "1,1" -- "0..n" SecurityType /' SecurityScheme has one SecurityType, SecurityType has zero or many SecurityScheme '/
+SecurityScheme "0,1" -- "0..n" ApiKeyLocation /' SecurityScheme has zero or one ApiKeyLocation, ApiKeyLocation has zero or many SecurityScheme '/
 
 @enduml

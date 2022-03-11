@@ -1,5 +1,4 @@
 var/
-
 #  Terraform
 **/.terraform/*
 *.tfstate
@@ -8,3 +7,6 @@ var/
 
 # macs
 .DS_Store
+
+.idea
+
