@@ -31,17 +31,6 @@ class DocumentController extends AbstractController
      * @param  Validator $validator
      * @return JsonResponse
      */
-    #[OA\Parameter(
-        name: 'body',
-        in: 'path',
-        required: true,
-        schema: new OA\Schema(
-            new Model(
-                type: DocumentPayload::class,
-                groups: ['payload']
-            )
-        )
-    )]
     #[OA\RequestBody(
         required: true,
         content: new OA\JsonContent(
@@ -155,7 +144,100 @@ class DocumentController extends AbstractController
                     value: '{
                         "success": true,
                         "data": {
-                            "id": "333dfadb-8867-4869-a998-8597149f97fe"
+                            "id": "a3363b79-21e7-48cd-87a9-63c924284a85",
+                            "title": "Pet Store",
+                            "description": "This is a Pet Store",
+                            "version": "3.0.0",
+                            "tags": [
+                                {
+                                    "name": "pet",
+                                    "description": "Everything about your Pets"
+                                }
+                            ],
+                            "paths": [
+                                {
+                                    "endpoint": "/pet/{id}",
+                                    "pathItems": [
+                                        {
+                                            "summary": "Update a pet",
+                                            "description": "Pet object that needs to be added to the store",
+                                            "httpMethod": "PUT",
+                                            "requestBody": {
+                                                "content": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "example": 0
+                                                        },
+                                                        "name": {
+                                                            "example": "doggie",
+                                                            "type": "string"
+                                                        },
+                                                        "status": {
+                                                            "example": "available"
+                                                        }
+                                                    }
+                                                },
+                                                "required": true,
+                                                "description": "Pet object that needs to be added to the store"
+                                            },
+                                            "responses": [
+                                                {
+                                                    "httpStatusCode": 405,
+                                                    "description": "Invalid input",
+                                                    "content": []
+                                                }
+                                            ],
+                                            "tags": [
+                                                "pet"
+                                            ],
+                                            "parameters": [
+                                                {
+                                                    "description": "ID of pet to return",
+                                                    "required": true,
+                                                    "location": "query",
+                                                    "name": "id",
+                                                    "parameterSchema": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "summary": "Find pet by id",
+                                            "description": "Find a pet in the Pet Store",
+                                            "httpMethod": "GET",
+                                            "responses": [
+                                                {
+                                                    "httpStatusCode": 200,
+                                                    "description": "Successful operation",
+                                                    "content": {
+                                                        "application/json": {
+                                                            "schema": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "example": 0
+                                                                    },
+                                                                    "name": {
+                                                                        "example": "doggie"
+                                                                    },
+                                                                    "status": {
+                                                                        "example": "available"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "tags": [
+                                                "pet"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     }'
                 )
@@ -274,6 +356,64 @@ class DocumentController extends AbstractController
     }
 
 
+    #[OA\Parameter(
+        name: "id",
+        in: "path",
+        description: "The id (uuid) of the document",
+        schema: new OA\Schema(type: "string"),
+        required: true,
+        examples: [
+            new OA\Examples(
+                example: 'uuid',
+                summary :'Exemple Document ID',
+                value: 'df0284f8-b93a-4b5d-afdb-260af888e60d'
+            )
+        ]
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "The Open API JSON File",
+        content: new OA\MediaType(
+            mediaType: 'application/json'
+        )
+    )]
+    #[OA\Response(
+        response: 401,
+        description: "Unauthorized",
+        content: new OA\JsonContent(
+            examples: [
+                new OA\Examples(
+                    example: 'wrong_uuid',
+                    summary :'Invalid ID',
+                    value: '{
+                        "success": false
+                    }'
+                )
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 404,
+        description: "Not Found",
+        content: new OA\JsonContent(
+            examples: [
+                new OA\Examples(
+                    example: 'not_found',
+                    summary :'Document not found',
+                    value: '{
+                        "success": false
+                    }'
+                )
+            ]
+        )
+    )]
+    /**
+     * Download an Open API Document by it's id
+     *
+     * @param  string $id the id of the document
+     * @param  FileSystem $fs
+     * @return Response
+     */
     #[Route('/download/{id}', name:'document_download', methods: ['GET'])]
     public function retrieve(string $id, FileSystem $fs) : Response
     {
@@ -304,6 +444,161 @@ class DocumentController extends AbstractController
      * @param  OpenApiDocumentRepository $repo
      * @return JsonResponse
      */
+    #[OA\Parameter(
+        name: "id",
+        in: "path",
+        description: "The id (uuid) of the document",
+        schema: new OA\Schema(type: "string"),
+        required: true,
+        examples: [
+            new OA\Examples(
+                example: 'uuid',
+                summary :'Exemple Document ID',
+                value: 'df0284f8-b93a-4b5d-afdb-260af888e60d'
+            )
+        ]
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "Request OK",
+        content: new OA\JsonContent(
+            examples: [
+                new OA\Examples(
+                    example: 'document_found_ok',
+                    summary :'Document found',
+                    value: '{
+                        "success": true,
+                        "data": {
+                            "id": "fab5ee01-6f73-443b-afb8-0026e4b72da9",
+                            "title": "Pet Store",
+                            "description": "This is a Pet Store",
+                            "version": "3.0.0",
+                            "tags": [
+                                {
+                                    "name": "pet",
+                                    "description": "Everything about your Pets"
+                                }
+                            ],
+                            "paths": [
+                                {
+                                    "endpoint": "/pet/{id}",
+                                    "pathItems": [
+                                        {
+                                            "summary": "Update a pet",
+                                            "description": "Pet object that needs to be added to the store",
+                                            "httpMethod": "PUT",
+                                            "requestBody": {
+                                                "content": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "example": 0
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "doggie"
+                                                        },
+                                                        "status": {
+                                                            "example": "available"
+                                                        }
+                                                    }
+                                                },
+                                                "required": true,
+                                                "description": "Pet object that needs to be added to the store"
+                                            },
+                                            "responses": [
+                                                {
+                                                    "httpStatusCode": 405,
+                                                    "description": "Invalid input",
+                                                    "content": []
+                                                }
+                                            ],
+                                            "tags": [
+                                                "pet"
+                                            ],
+                                            "parameters": [
+                                                {
+                                                    "description": "ID of pet to return",
+                                                    "required": true,
+                                                    "location": "query",
+                                                    "name": "id",
+                                                    "parameterSchema": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "summary": "Find pet by id",
+                                            "description": "Find a pet in the Pet Store",
+                                            "httpMethod": "GET",
+                                            "responses": [
+                                                {
+                                                    "httpStatusCode": 200,
+                                                    "description": "Successful operation",
+                                                    "content": {
+                                                        "application/json": {
+                                                            "schema": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "example": 0
+                                                                    },
+                                                                    "name": {
+                                                                        "example": "doggie"
+                                                                    },
+                                                                    "status": {
+                                                                        "example": "available"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "tags": [
+                                                "pet"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }'
+                )
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 401,
+        description: "Unauthorized",
+        content: new OA\JsonContent(
+            examples: [
+                new OA\Examples(
+                    example: 'wrong_uuid',
+                    summary :'Invalid ID',
+                    value: '{
+                        "success": false
+                    }'
+                )
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 404,
+        description: "Not Found",
+        content: new OA\JsonContent(
+            examples: [
+                new OA\Examples(
+                    example: 'not_found',
+                    summary :'Document not found',
+                    value: '{
+                        "success": false
+                    }'
+                )
+            ]
+        )
+    )]
     #[Route('/{id}', name: 'document_read', methods: ['GET'])]
     public function read(string $id, OpenApiDocumentRepository $repo) : JsonResponse
     {
