@@ -279,19 +279,19 @@ class DocumentController extends AbstractController
 
         if (!Uuid::isValid($id)) return new JsonResponse([ 'success' => false ], Response::HTTP_UNAUTHORIZED);
 
-        $filename = $id . '.json';
-        // dd($fs->listKeys());
+        $filename =  $id . '.json';
 
-        if (!$fs->has($filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
+        if (!$fs->has('document/'.$filename)) return new JsonResponse([ 'success' => false ], Response::HTTP_NOT_FOUND);
 
-        $file = $fs->get($filename);
+        $file = $fs->get('document/'.$filename);
         $response = new Response($file->getContent());
 
         $disposition = HeaderUtils::makeDisposition(
             HeaderUtils::DISPOSITION_ATTACHMENT,
             $filename
         );
-        
+
+
         $response->headers->set('Content-Disposition', $disposition);
         return $response;
     }
