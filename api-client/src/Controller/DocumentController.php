@@ -347,8 +347,10 @@ class DocumentController extends AbstractController
 
         $em->flush();
 
-        $bus->dispatch(new CreateOpenApiDocument($document->getId()));
-        $bus->dispatch(new CreateOpenApiTests($document->getId()));
+
+        $id = $document->getId()->toString();
+        $bus->dispatch(new CreateOpenApiDocument($id));
+        $bus->dispatch(new CreateOpenApiTests($id));
 
         return new JsonResponse([
             'success'    => true,

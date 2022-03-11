@@ -220,7 +220,7 @@ class DocumentPayload {
      */
     public function getPathItemTags(array $tagsName) : array
     {
-        return array_filter($this->tags, function($tag) use ($tagsName) {
+        return array_filter($this->tags ?? [], function($tag) use ($tagsName) {
 
             return in_array($tag->getName(), $tagsName);
         });
