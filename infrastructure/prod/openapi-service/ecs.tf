@@ -33,6 +33,16 @@ resource "aws_ecs_task_definition" "reverse_openapi" {
       cpu       = 256
       memory    = 512
       essential = true
+      environment = [
+        { "name" : "APP_ENV", "value" : var.app_env },
+        { "name" : "DATABASE_URL", "value" : var.database_url },
+        { "name" : "SQS_TRANSPORT_DSN", "value" : var.sqs_transport_dsn },
+        { "name" : "SQS_DLQ_TRANSPORT_DSN", "value" : var.sqs_dlq_transport_dsn },
+        { "name" : "S3_KEY", "value" : var.s3_key },
+        { "name" : "S3_SECRET", "value" : var.s3_secret },
+        { "name" : "S3_REGION", "value" : var.s3_region },
+        { "name" : "S3_BUCKET", "value" : var.s3_bucket },
+      ]
     },
   ])
 }
