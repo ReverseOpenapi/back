@@ -8,7 +8,7 @@ package main
 	"github.com/stretchr/testify/assert"
 )
 
-func seedElementhTtUT() (interface{}, error) {
+func seedElementBcVFo() (interface{}, error) {
 	return "", nil
 	resp, err := http.Get("localhost")
 
@@ -27,7 +27,7 @@ func seedElementhTtUT() (interface{}, error) {
 }
 
 func TestGet1(t *testing.T) {
-	_, err := seedElementhTtUT()
+	_, err := seedElementBcVFo()
 	if err != nil {
 		t.Errorf("Error while seeding table: %s", err)
 	}
@@ -37,16 +37,8 @@ func TestGet1(t *testing.T) {
 		errMessage string
 	} { 
 {
-		content: `{"id":{"example":0},"name":{"example":"doggie"},"status":{"example":"available"}}`,
+		content: `null`,
 		statusCode: 200,
-		errMessage: "",
-	}, {
-		content: `[]`,
-		statusCode: 400,
-		errMessage: "",
-	}, {
-		content: `[]`,
-		statusCode: 404,
 		errMessage: "",
 	}, 
 }

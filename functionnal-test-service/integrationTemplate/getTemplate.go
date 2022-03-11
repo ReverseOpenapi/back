@@ -29,7 +29,6 @@ var (
 	GetTemplate GetTemplateInterface
 )
 
-
 func NewGetTemplate(url, err, pathItem, randomStringSeed string, httpResponse []*model.HttpResponse, f *os.File) GetTemplateInterface {
 	GetTemplate = &getTemplate{
 		url: url,

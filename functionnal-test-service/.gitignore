@@ -2,3 +2,4 @@ tmp/
 go.sum
 .env
 .aws
+docker-compose.yml
