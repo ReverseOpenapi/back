@@ -1,0 +1,21 @@
+framework:
+    messenger:
+        serializer:
+            default_serializer: App\Messenger\ExternalJsonMessageSerializer
+
+        transports:
+            sqs:
+                dsn: "%env(SQS_TRANSPORT_DSN)%"
+                options:
+                    auto_setup: false
+                failure_transport: sqs_dead_letter_queue
+                retry_strategy:
+                    max_retries: 0
+
+            sqs_dead_letter_queue:
+                dsn: "%env(SQS_DLQ_TRANSPORT_DSN)%"
+                options:
+                    auto_setup: false
+
+        routing:
+            'App\Messenger\Message\CreateOpenApiDocument': sqs

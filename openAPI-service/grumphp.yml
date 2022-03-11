@@ -1,0 +1,24 @@
+grumphp:
+  tasks:
+    phpcsfixer2:
+      allow_risky: true
+      cache_file: '.php-cs-fixer.cache'
+      config: '.php-cs-fixer.dist.php'
+      using_cache: true
+      config_contains_finder: true
+      verbose: true
+      diff: false
+      triggered_by: ['php']
+    phpcpd:
+      directory: ['.']
+      exclude: ['vendor', 'var', 'public', 'config', 'bin', 'translations', 'migrations']
+      fuzzy: false
+      min_lines: 5
+      min_tokens: 70
+      triggered_by: ['php']
+    phpstan:
+      configuration: '.phpstan.neon'
+      level: 6
+      triggered_by: ['php']
+      memory_limit: "-1"
+      use_grumphp_paths: true

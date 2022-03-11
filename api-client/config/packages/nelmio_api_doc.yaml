@@ -1,0 +1,13 @@
+nelmio_api_doc:
+  documentation:
+    servers:
+      - url: http://13.36.209.217/public/
+        description: API
+      - url: http://localhost:85
+        description: Local Server
+    info:
+      title: Reverse Open API Documentation
+      description: This is the documentation of the Reverse Open API Client
+      version: 1.0.0
+  areas:
+    path_patterns: [^/api(?!/doc$)]
